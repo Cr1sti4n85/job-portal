@@ -10,6 +10,7 @@ import { JobModule } from './job/job.module';
 import { ApplicationModule } from './application/application.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   controllers: [AppController],
@@ -31,6 +32,7 @@ import { JwtModule } from '@nestjs/jwt';
     CompanyModule,
     JobModule,
     ApplicationModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
