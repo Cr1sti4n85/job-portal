@@ -6,6 +6,7 @@ import {
   IsArray,
   IsUrl,
 } from 'class-validator';
+import { Role } from 'generated/prisma';
 
 export class RegisterUserDto {
   @IsNotEmpty({ message: 'El campo no puede estar vacío' })
@@ -58,5 +59,5 @@ export class RegisterUserDto {
 
   @IsOptional()
   @IsString()
-  role?: any;
+  role?: Role;
 }
