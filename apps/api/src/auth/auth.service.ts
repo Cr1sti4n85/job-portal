@@ -6,6 +6,7 @@ import { UserService } from 'src/user/user.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import type { Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -47,6 +48,7 @@ export class AuthService {
       secure:
         this.configService.getOrThrow<string>('NODE_ENV') === 'production',
       expires: expiresAccessToken,
+      sameSite: 'lax',
     });
 
     return {
@@ -54,5 +56,9 @@ export class AuthService {
       success: true,
       message: 'Inicio de sesión exitoso',
     };
+  }
+
+  logout(user: User, res: Response) {
+    res.clearCookie('access_token');
   }
 }
