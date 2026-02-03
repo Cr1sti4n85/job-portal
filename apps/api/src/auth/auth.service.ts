@@ -6,7 +6,7 @@ import { UserService } from 'src/user/user.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import type { Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { User } from 'src/user/entities/user.entity';
+import { User } from 'src/types/current-user';
 
 @Injectable()
 export class AuthService {

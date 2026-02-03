@@ -58,19 +58,34 @@ export class UserService {
     };
   }
 
-  findAll() {
-    return `This action returns all user`;
-  }
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const {
+      fullName,
+      email,
+      phoneNumber,
+      profileBio,
+      profileSkills,
+      profileResume,
+      profilePhoto,
+    } = updateUserDto;
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
+    if (!fullName || !email || !phoneNumber) {
+      throw new BadRequestException('Algunos campos son obligatorios.');
+    }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: {
+        fullName,
+        email,
+        phoneNumber,
+        profileBio,
+        profileSkills,
+        profileResume,
+        profilePhoto,
+      },
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+    return updatedUser;
   }
 }

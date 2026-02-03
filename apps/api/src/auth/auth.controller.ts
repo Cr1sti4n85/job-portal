@@ -11,8 +11,8 @@ import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import type { Request, Response } from 'express';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import type { User } from 'src/types/current-user';
 import { CurrentUser } from 'src/common/current-user.decorator';
-import { User } from 'src/user/entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
