@@ -69,11 +69,32 @@ export class CompanyService {
     };
   }
 
-  update(id: number, updateCompanyDto: UpdateCompanyDto) {
-    return `This action updates a #${id} company`;
+  async update(id: string, updateCompanyDto: UpdateCompanyDto) {
+    const updatedCompany = await this.prisma.company.update({
+      where: { id },
+      data: updateCompanyDto,
+    });
+
+    if (!updatedCompany) {
+      throw new NotFoundException('Empresa no encontrada');
+    }
+    return {
+      success: true,
+      message: 'Empresa actualizada exitosamente',
+      company: updatedCompany,
+    };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} company`;
+  async remove(id: string) {
+    const deletedCompany = await this.prisma.company.delete({
+      where: { id },
+    });
+    if (!deletedCompany) {
+      throw new NotFoundException('Empresa no encontrada');
+    }
+    return {
+      success: true,
+      message: 'Empresa eliminada exitosamente',
+    };
   }
 }
