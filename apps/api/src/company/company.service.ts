@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -35,12 +39,34 @@ export class CompanyService {
     };
   }
 
-  findAll() {
-    return `This action returns all company`;
+  async findCompanies(id: string) {
+    const companies = await this.prisma.company.findMany({
+      where: { userId: id },
+    });
+
+    if (!companies.length) {
+      throw new NotFoundException(
+        'No se encontraron empresas para este usuario',
+      );
+    }
+
+    return {
+      success: true,
+      companies,
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} company`;
+  async findById(id: string) {
+    const company = await this.prisma.company.findUnique({
+      where: { id },
+    });
+    if (!company) {
+      throw new NotFoundException('Empresa no encontrada');
+    }
+    return {
+      success: true,
+      company,
+    };
   }
 
   update(id: number, updateCompanyDto: UpdateCompanyDto) {

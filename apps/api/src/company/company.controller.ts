@@ -29,13 +29,15 @@ export class CompanyController {
   }
 
   @Get()
-  findAll() {
-    return this.companyService.findAll();
+  @UseGuards(JwtAuthGuard)
+  findCompanies(@CurrentUser() user: User) {
+    return this.companyService.findCompanies(user.id);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.companyService.findOne(+id);
+  @UseGuards(JwtAuthGuard)
+  findCompanyById(@Param('id') id: string) {
+    return this.companyService.findById(id);
   }
 
   @Patch(':id')
