@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsNumber, IsPositive, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsPositive,
+  IsString,
+} from 'class-validator';
 
 export class CreateJobDto {
   @IsNotEmpty()
@@ -10,8 +16,8 @@ export class CreateJobDto {
   description: string;
 
   @IsNotEmpty()
-  @IsString()
-  requirements: string;
+  @IsArray()
+  requirements: string[];
 
   @IsNotEmpty()
   @IsNumber()
@@ -31,10 +37,10 @@ export class CreateJobDto {
   experienceLevel: string;
 
   @IsNotEmpty()
-  @IsString()
-  companyId: string;
+  @IsNumber()
+  position: number;
 
   @IsNotEmpty()
   @IsString()
-  createdBy: string;
+  companyId: string;
 }

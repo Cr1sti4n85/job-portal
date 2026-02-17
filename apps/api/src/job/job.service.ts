@@ -1,11 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class JobService {
-  create(createJobDto: CreateJobDto) {
-    return 'This action adds a new job';
+  constructor(private readonly prismaService: PrismaService) {}
+
+  async create(id: string, createJobDto: CreateJobDto) {
+    const {
+      title,
+      description,
+      requirements,
+      salary,
+      location,
+      jobType,
+      experienceLevel,
+      companyId,
+      position,
+    } = createJobDto;
+    const job = await this.prismaService.job.create({
+      data: {
+        title,
+        description,
+        requirements,
+        position,
+        salary,
+        location,
+        jobType,
+        experienceLevel,
+        companyId,
+        createdBy: id,
+      },
+    });
+
+    if (!job)
+      return new BadRequestException('No se pudo crear el nuevo trabajo');
+
+    return {
+      message: 'Trabajo creado exitosamente',
+      success: true,
+      job,
+    };
   }
 
   findAll() {

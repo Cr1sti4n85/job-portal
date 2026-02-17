@@ -1,15 +1,28 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { JobService } from './job.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { CurrentUser } from 'src/common/current-user.decorator';
+import type { User } from 'src/types/current-user';
 
 @Controller('job')
 export class JobController {
   constructor(private readonly jobService: JobService) {}
 
   @Post()
-  create(@Body() createJobDto: CreateJobDto) {
-    return this.jobService.create(createJobDto);
+  @UseGuards(JwtAuthGuard)
+  createJob(@CurrentUser() user: User, @Body() createJobDto: CreateJobDto) {
+    return this.jobService.create(user.id, createJobDto);
   }
 
   @Get()
