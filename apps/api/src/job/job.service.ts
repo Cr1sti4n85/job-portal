@@ -1,7 +1,13 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { JobQuery } from 'src/types/job-query';
+import type { Job } from 'src/types/job';
 
 @Injectable()
 export class JobService {
@@ -44,8 +50,54 @@ export class JobService {
     };
   }
 
-  findAll() {
-    return `This action returns all job`;
+  async findAll(query: JobQuery) {
+    const { keyword, location, jobType, salary } = query;
+
+    let jobs: Job[] = [];
+
+    const salaryRange = salary?.split('-');
+
+    if (keyword || location || jobType || salary) {
+      jobs = await this.prismaService.job.findMany({
+        where: {
+          ...(keyword && {
+            OR: [
+              { title: { contains: keyword, mode: 'insensitive' } },
+              { description: { contains: keyword, mode: 'insensitive' } },
+            ],
+          }),
+
+          ...(location && {
+            location: { contains: location, mode: 'insensitive' },
+          }),
+
+          ...(jobType && {
+            jobType: { contains: jobType, mode: 'insensitive' },
+          }),
+
+          ...(salary &&
+            salaryRange?.length && {
+              salary: {
+                gte: parseInt(salaryRange[0], 10),
+                lte: parseInt(salaryRange[1], 10),
+              },
+            }),
+        },
+        include: { company: true },
+        orderBy: { createdAt: 'desc' },
+      });
+    } else {
+      jobs = await this.prismaService.job.findMany({ skip: 0, take: 6 });
+    }
+
+    if (!jobs || jobs.length === 0) {
+      throw new NotFoundException('No se encontraron trabajos');
+    }
+
+    return {
+      success: true,
+      jobs,
+    };
   }
 
   findOne(id: number) {

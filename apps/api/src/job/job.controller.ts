@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { JobService } from './job.service';
 import { CreateJobDto } from './dto/create-job.dto';
@@ -14,6 +15,7 @@ import { UpdateJobDto } from './dto/update-job.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/common/current-user.decorator';
 import type { User } from 'src/types/current-user';
+import type { JobQuery } from 'src/types/job-query';
 
 @Controller('job')
 export class JobController {
@@ -26,8 +28,8 @@ export class JobController {
   }
 
   @Get()
-  findAll() {
-    return this.jobService.findAll();
+  findAllJobs(@Query() query: JobQuery) {
+    return this.jobService.findAll(query);
   }
 
   @Get(':id')
