@@ -33,8 +33,25 @@ export class JobController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.jobService.findOne(+id);
+  findJobById(@Param('id') jobId: string) {
+    return this.jobService.findOne(jobId);
+  }
+
+  @Get()
+  getJobByUserId(@CurrentUser() user: User) {
+    return this.jobService.findByUserId(user.id);
+  }
+
+  @Post('favorites/:id')
+  @UseGuards(JwtAuthGuard)
+  addFavoriteJob(@CurrentUser() user: User, @Param('id') jobId: string) {
+    return this.jobService.addFavorite(user.id, jobId);
+  }
+
+  @Get('favorites/all')
+  @UseGuards(JwtAuthGuard)
+  getFavoriteJobs(@CurrentUser() user: User) {
+    return this.jobService.getFavorites(user.id);
   }
 
   @Patch(':id')

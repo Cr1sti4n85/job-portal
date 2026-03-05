@@ -100,8 +100,65 @@ export class JobService {
     };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} job`;
+  async findOne(jobId: string) {
+    const job = await this.prismaService.job.findUnique({
+      where: { id: jobId },
+    });
+
+    return {
+      success: true,
+      job,
+    };
+  }
+
+  async findByUserId(userId: string) {
+    const jobs = await this.prismaService.job.findMany({
+      where: { createdBy: userId },
+      include: { company: true },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (!jobs || jobs.length === 0) {
+      throw new NotFoundException('No se encontraron trabajos de este usuario');
+    }
+    return {
+      success: true,
+      jobs,
+    };
+  }
+
+  async addFavorite(userId: string, jobId: string) {
+    const job = await this.prismaService.favorite.findFirst({
+      where: { jobId, userId },
+    });
+
+    if (job) {
+      throw new BadRequestException('Este trabajo ya está en favoritos');
+    }
+
+    const favoriteJob = await this.prismaService.favorite.create({
+      data: { jobId, userId },
+    });
+
+    return {
+      success: true,
+      message: 'Trabajo agregado a favoritos',
+      favoriteJob,
+    };
+  }
+
+  async getFavorites(userId: string) {
+    const favoriteJobs = await this.prismaService.favorite.findMany({
+      where: { userId },
+      include: { job: { include: { company: true } } },
+    });
+    if (!favoriteJobs || favoriteJobs.length === 0) {
+      throw new NotFoundException('Tu lista de favoritos está vacía');
+    }
+    return {
+      success: true,
+      favoriteJobs,
+    };
   }
 
   update(id: number, updateJobDto: UpdateJobDto) {
