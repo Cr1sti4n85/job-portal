@@ -5,14 +5,18 @@ import SelectForm from "@/components/SelectForm";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import uploadFile from "@/lib/uploadFile";
 import { Profile } from "@/types/profile";
 import { Resume } from "@/types/resume";
 import { useLocalStorage } from "@mantine/hooks";
 import { X } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const Register = () => {
+  const router = useRouter();
   const [profile, setProfile] = useState<Profile>({
     profileBio: "",
     profilePhoto: "",
@@ -20,11 +24,55 @@ const Register = () => {
 
   const [resume, setResume] = useState<Resume>({
     profileResume: "",
-    profileOriginalResume: "",
+    profileResumeOriginalName: "",
   });
 
   const handleSubmit = async (formData: FormData) => {
     const res = await RegisterUser(formData, profile, resume);
+    if (res?.error) {
+      console.log({ res });
+      toast.error(res.message);
+    } else {
+      router.push("/login");
+    }
+  };
+
+  // useEffect(() => {
+  //   if (user?.role === "recruiter") {
+  //     router.push("/admin/companies");
+  //   } else if (user?.role === "student") {
+  //     router.push("/");
+  //   }
+  // }, []);
+
+  const handleUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: string,
+  ) => {
+    const file = e.target.files?.[0];
+    const name = file?.name?.split(".")?.[0];
+
+    if (!file) {
+      return;
+    }
+    const uploadedFile = await uploadFile(file);
+
+    if (!name || !uploadedFile) {
+      toast.error("Error al subir el archivo");
+      return;
+    }
+
+    if (type === "profile") {
+      setProfile({ profileBio: name, profilePhoto: uploadedFile });
+      console.log({ uploadedFile });
+      toast.success("Archivo subido con éxito");
+    } else {
+      setResume({
+        profileResume: uploadedFile,
+        profileResumeOriginalName: name,
+      });
+      toast.success("Archivo subido con éxito");
+    }
   };
 
   const [user] = useLocalStorage({
@@ -45,7 +93,7 @@ const Register = () => {
         <FormInput
           label="Nombre completo"
           type="text"
-          name="fullname"
+          name="fullName"
           placeholder="Ingresa tu nombre"
         />
         <FormInput
@@ -69,13 +117,13 @@ const Register = () => {
         {profile?.profilePhoto ? (
           <>
             <Label>Foto de perfil</Label>
-            <div>
-              <Avatar>
-                <AvatarImage />
+            <div className="h-20 w-20 relative mt-1">
+              <Avatar className="w-full h-full">
+                <AvatarImage src={profile?.profilePhoto} alt="profile image" />
                 <AvatarFallback></AvatarFallback>
               </Avatar>
               <X
-                className="absolute -top-1 -right-1 z-10 cursor-pointer"
+                className="absolute -top-1 -right-1 z-10 cursor-pointer size-4"
                 onClick={() => setProfile({ profileBio: "", profilePhoto: "" })}
               />
             </div>
@@ -86,6 +134,7 @@ const Register = () => {
             type="file"
             name="picture"
             placeholder="Sube una imagen"
+            onChange={(e) => handleUpload(e, "profile")}
           />
         )}
 
@@ -98,7 +147,7 @@ const Register = () => {
         {resume?.profileResume ? (
           <>
             <Label>CV</Label>
-            <div>
+            <div className="h-20 relative mt-1">
               <object
                 width="50%"
                 height="50%"
@@ -113,13 +162,21 @@ const Register = () => {
               <X
                 className="absolute -top-1 -right-1 z-10 cursor-pointer"
                 onClick={() =>
-                  setResume({ profileResume: "", profileOriginalResume: "" })
+                  setResume({
+                    profileResume: "",
+                    profileResumeOriginalName: "",
+                  })
                 }
               />
             </div>
           </>
         ) : (
-          <FormInput label="Subir CV" type="file" name="picture" />
+          <FormInput
+            label="Subir CV"
+            type="file"
+            name="picture"
+            onChange={(e) => handleUpload(e, "resume")}
+          />
         )}
         <SelectForm
           name="role"

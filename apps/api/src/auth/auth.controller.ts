@@ -33,7 +33,6 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
     @Req() req: Request,
   ) {
-    console.log({ 'cookies ': req.cookies });
     return this.authService.logout(user, res);
   }
 }
