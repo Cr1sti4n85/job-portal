@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import uploadFile from "@/lib/uploadFile";
 import { Profile } from "@/types/profile";
 import { Resume } from "@/types/resume";
+import { LoggedUser } from "@/types/user";
 import { useLocalStorage } from "@mantine/hooks";
 import { X } from "lucide-react";
 import Link from "next/link";
@@ -17,9 +18,15 @@ import { toast } from "sonner";
 
 const Register = () => {
   const router = useRouter();
+
   const [profile, setProfile] = useState<Profile>({
     profileBio: "",
     profilePhoto: "",
+  });
+
+  const [user, setUser] = useLocalStorage({
+    key: "userData",
+    defaultValue: {} as LoggedUser,
   });
 
   const [resume, setResume] = useState<Resume>({
@@ -37,13 +44,13 @@ const Register = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (user?.role === "recruiter") {
-  //     router.push("/admin/companies");
-  //   } else if (user?.role === "student") {
-  //     router.push("/");
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (user?.role === "recruiter") {
+      router.push("/admin/companies");
+    } else if (user?.role === "student") {
+      router.push("/");
+    }
+  }, []);
 
   const handleUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -74,11 +81,6 @@ const Register = () => {
       toast.success("Archivo subido con éxito");
     }
   };
-
-  const [user] = useLocalStorage({
-    key: "userData",
-    defaultValue: {},
-  });
 
   return (
     <div className="flex items-center justify-center">

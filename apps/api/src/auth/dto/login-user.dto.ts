@@ -10,4 +10,8 @@ export class LoginUserDto {
   @MinLength(8)
   @IsNotEmpty({ message: 'Campo obligatorio' })
   password: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'Campo obligatorio' })
+  role: string;
 }
