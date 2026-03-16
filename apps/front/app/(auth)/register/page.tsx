@@ -24,9 +24,9 @@ const Register = () => {
     profilePhoto: "",
   });
 
-  const [user, setUser] = useLocalStorage({
+  const [user, setUser] = useLocalStorage<LoggedUser | null>({
     key: "userData",
-    defaultValue: {} as LoggedUser,
+    defaultValue: null,
   });
 
   const [resume, setResume] = useState<Resume>({
@@ -37,7 +37,6 @@ const Register = () => {
   const handleSubmit = async (formData: FormData) => {
     const res = await RegisterUser(formData, profile, resume);
     if (res?.error) {
-      console.log({ res });
       toast.error(res.message);
     } else {
       router.push("/login");
