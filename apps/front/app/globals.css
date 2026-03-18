@@ -10,6 +10,12 @@
   }
 }
 
+@layer utilities {
+  .bg-primary-color {
+    background-color: #3f173a;
+  }
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
