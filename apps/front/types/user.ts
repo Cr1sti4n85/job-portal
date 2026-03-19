@@ -1,3 +1,5 @@
+import { Application } from "./application";
+
 export interface LoggedUser {
   id: string;
   fullName: string;
@@ -10,6 +12,7 @@ export interface LoggedUser {
   profileCompanyId?: string;
   profilePhoto?: string;
   role: string;
+  applications?: Application[];
   createdAt: Date;
   updatedAt: Date;
 }

@@ -1,3 +1,4 @@
+import { Application } from "./application";
 import { Company } from "./company";
 
 export type Job = {
@@ -13,6 +14,7 @@ export type Job = {
   companyId: string;
   company: Company;
   createdBy: string;
+  applications: Application[];
   createdAt: Date;
   updatedAt: Date;
 };
