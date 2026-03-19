@@ -87,7 +87,11 @@ export class JobService {
         orderBy: { createdAt: 'desc' },
       });
     } else {
-      jobs = await this.prismaService.job.findMany({ skip: 0, take: 6 });
+      jobs = await this.prismaService.job.findMany({
+        skip: 0,
+        take: 6,
+        include: { company: true },
+      });
     }
 
     if (!jobs || jobs.length === 0) {

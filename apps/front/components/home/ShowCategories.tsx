@@ -8,7 +8,6 @@ import {
   CarouselPrevious,
 } from "../ui/carousel";
 import { categories } from "@/lib/carouselData";
-import { Card, CardContent } from "../ui/card";
 import Link from "next/link";
 import { Button } from "../ui/button";
 
