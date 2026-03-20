@@ -60,5 +60,9 @@ export class AuthService {
 
   logout(user: User, res: Response) {
     res.clearCookie('access_token');
+    return {
+      success: true,
+      message: 'Has cerrado al sesión',
+    };
   }
 }

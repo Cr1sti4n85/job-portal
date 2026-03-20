@@ -3,6 +3,7 @@ import { LoggedUser } from "@/types/user";
 import { useLocalStorage } from "@mantine/hooks";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const Navbar = () => {
   const router = useRouter();
@@ -12,10 +13,15 @@ const Navbar = () => {
   });
 
   const logOut = async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
       cache: "no-cache",
+      credentials: "include",
     });
+    const data = await res.json();
     setUser(null);
+    if (data.success) {
+      toast(data.message);
+    }
     router.push("/login");
   };
 

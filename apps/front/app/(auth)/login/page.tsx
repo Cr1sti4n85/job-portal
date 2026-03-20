@@ -1,18 +1,34 @@
 "use client";
-
-import { LoginUser } from "@/actions/user";
 import FormInput from "@/components/FormInput";
-import SelectForm from "@/components/SelectForm";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { LoggedUser } from "@/types/user";
 import { useLocalStorage } from "@mantine/hooks";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const Login = () => {
   const router = useRouter();
+  const [userData, setUserData] = useState<{
+    email: string;
+    password: string;
+    role: string;
+  }>({
+    email: "",
+    password: "",
+    role: "",
+  });
 
   const [user, setUser] = useLocalStorage({
     key: "userData",
@@ -25,22 +41,37 @@ const Login = () => {
     } else if (user?.role === "student") {
       router.push("/");
     }
-  }, []);
+  }, [user, router]);
 
-  const handleSubmit = async (formData: FormData) => {
-    const res = await LoginUser(formData);
-    if (res.error) {
-      toast.error(res.error);
-    } else {
-      toast.success("Inicio de sesión exitoso");
-      setUser(res.user);
-      router.push("/");
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    try {
+      e.preventDefault();
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast(data.message);
+        setUser(data.user);
+        if (user?.role === "recruiter") {
+          router.push("/admin/companies");
+        } else if (user?.role === "student") {
+          router.push("/");
+        }
+      }
+    } catch {
+      toast.error("Error al iniciar sesión");
     }
   };
   return (
     <div className="flex items-center justify-center h-[calc(100vh-100px)] max-w-7xl mx-auto mb-12">
       <form
-        action={handleSubmit}
+        onSubmit={handleSubmit}
         className="
     w-1/2 border border-gray-200 rounded p-4 bg-gray-100 my-6"
       >
@@ -53,6 +84,8 @@ const Login = () => {
           type="email"
           name="email"
           placeholder="Ingresa tu correo electrónico"
+          value={userData.email}
+          onChange={(e) => setUserData({ ...userData, email: e.target.value })}
         />
 
         <FormInput
@@ -60,17 +93,35 @@ const Login = () => {
           type="password"
           name="password"
           placeholder="Ingresa tu contraseña"
+          value={userData.password}
+          onChange={(e) =>
+            setUserData({ ...userData, password: e.target.value })
+          }
         />
 
-        <SelectForm
-          name="role"
-          placeholder="Selecciona el rol"
-          list={["student", "recruiter"]}
-        />
-        <Button
-          type="submit"
-          className="w-full my-4 bg-yellow-400/90 hover:bg-yellow-400/95"
-        >
+        <div className="my-3">
+          <Select
+            name={"role"}
+            value={userData.role}
+            onValueChange={(value) => setUserData({ ...userData, role: value })}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Selecciona rol" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Selecciona el rol</SelectLabel>
+                {["employee", "recruiter"].map((item, idx) => (
+                  <SelectItem key={idx} value={item}>
+                    {item}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Button className="w-full my-4 bg-yellow-400/90 hover:bg-yellow-400/95">
           Iniciar sesión
         </Button>
         <span>
