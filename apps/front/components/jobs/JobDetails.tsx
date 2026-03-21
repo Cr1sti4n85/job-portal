@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { useLocalStorage } from "@mantine/hooks";
 import { LoggedUser } from "@/types/user";
 import Image from "next/image";
+import { applyJobHandler } from "@/actions/jobs";
+import { toast } from "sonner";
 
 const JobDetails = ({ job, jobId }: { job: Job; jobId: string }) => {
   const [user] = useLocalStorage<LoggedUser | null>({
@@ -15,6 +17,15 @@ const JobDetails = ({ job, jobId }: { job: Job; jobId: string }) => {
 
   const isApplied =
     job?.applications.some((app) => app.applicantId === user?.id) ?? false;
+
+  const applyToJob = async () => {
+    const res = await applyJobHandler(jobId);
+    if (res.success) {
+      toast.success(res.message);
+    } else {
+      toast.error(res.error);
+    }
+  };
 
   return (
     <div>
@@ -36,6 +47,7 @@ const JobDetails = ({ job, jobId }: { job: Job; jobId: string }) => {
         <Button
           disabled={isApplied}
           className={`rounded-lg py-4 ${isApplied ? "bg-gray-600 cursor-not-allowed" : "bg-yellow-400 hover:bg-yellow-500 cursor-pointer"}`}
+          onClick={applyToJob}
         >
           {isApplied ? "Ya postulaste" : "Postular ahora"}
         </Button>
