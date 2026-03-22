@@ -2,11 +2,10 @@
 import { Job } from "@/types/jobs";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { useEffect, useState } from "react";
 import { useLocalStorage } from "@mantine/hooks";
 import { LoggedUser } from "@/types/user";
 import Image from "next/image";
-import { applyJobHandler } from "@/actions/jobs";
+import { addToFavorites, applyToJob } from "@/actions/jobs";
 import { toast } from "sonner";
 
 const JobDetails = ({ job, jobId }: { job: Job; jobId: string }) => {
@@ -18,8 +17,17 @@ const JobDetails = ({ job, jobId }: { job: Job; jobId: string }) => {
   const isApplied =
     job?.applications.some((app) => app.applicantId === user?.id) ?? false;
 
-  const applyToJob = async () => {
-    const res = await applyJobHandler(jobId);
+  const handleApply = async () => {
+    const res = await applyToJob(jobId);
+    if (res.success) {
+      toast.success(res.message);
+    } else {
+      toast.error(res.error);
+    }
+  };
+
+  const handleFavorites = async () => {
+    const res = await addToFavorites(jobId);
     if (res.success) {
       toast.success(res.message);
     } else {
@@ -47,7 +55,7 @@ const JobDetails = ({ job, jobId }: { job: Job; jobId: string }) => {
         <Button
           disabled={isApplied}
           className={`rounded-lg py-4 ${isApplied ? "bg-gray-600 cursor-not-allowed" : "bg-yellow-400 hover:bg-yellow-500 cursor-pointer"}`}
-          onClick={applyToJob}
+          onClick={handleApply}
         >
           {isApplied ? "Ya postulaste" : "Postular ahora"}
         </Button>
@@ -81,8 +89,11 @@ const JobDetails = ({ job, jobId }: { job: Job; jobId: string }) => {
         </div>
         <div className="flex flex-col justify-center gap-2">
           <Image src={"/developer.png"} alt="" width={150} height={150} />
-          <Button className="rounded-lg bg-yellow-400 hover:bg-yellow-400/95 ">
-            Guardar
+          <Button
+            className="rounded-lg bg-yellow-400 hover:bg-yellow-400/95 "
+            onClick={handleFavorites}
+          >
+            Guardar en favoritos
           </Button>
         </div>
       </div>
