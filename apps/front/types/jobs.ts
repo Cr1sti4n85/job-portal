@@ -18,3 +18,12 @@ export type Job = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type FindJobsPageProps = {
+  searchParams: Promise<{
+    keyword?: string;
+    location?: string;
+    jobType?: string;
+    salary?: string;
+  }>;
+};

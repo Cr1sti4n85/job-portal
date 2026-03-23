@@ -1,5 +1,4 @@
 import JobDetails from "@/components/jobs/JobDetails";
-import React from "react";
 
 type JobPageProps = {
   params: Promise<{ jobId: string }>;

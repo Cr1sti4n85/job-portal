@@ -1,0 +1,40 @@
+export const filterData = [
+  {
+    filterType: "Ubicación",
+    filter: "location",
+    opts: [
+      "I Región",
+      "II Región",
+      "III Región",
+      "IV Región",
+      "V Región",
+      "Región Metropolitana",
+      "VI Región",
+      "VII Región",
+      "VIII Región",
+      "IX Región",
+      "X Región",
+      "XI Región",
+      "XII Región",
+      "XIV Región",
+      "XV Región",
+    ],
+  },
+  {
+    filterType: "Tipo de empleo",
+    filter: "location",
+    opts: [
+      "Frontend",
+      "Backend",
+      "Full Stack",
+      "Data Science",
+      "DevOps",
+      "UI/UX Design",
+    ],
+  },
+  {
+    filterType: "Sueldo",
+    filter: "location",
+    opts: ["0-499999", "500000-999999", "1000000-1999999"],
+  },
+];
