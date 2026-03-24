@@ -1,4 +1,5 @@
 "use client";
+import { getUser } from "@/actions/user";
 import FormInput from "@/components/FormInput";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +20,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const Login = () => {
+  const [user, setUser] = useState<LoggedUser | null>(null);
   const router = useRouter();
   const [userData, setUserData] = useState<{
     email: string;
@@ -30,18 +32,20 @@ const Login = () => {
     role: "",
   });
 
-  const [user, setUser] = useLocalStorage({
-    key: "userData",
-    defaultValue: {} as LoggedUser,
-  });
-
   useEffect(() => {
-    if (user?.role === "recruiter") {
-      router.push("/admin/companies");
-    } else if (user?.role === "student") {
-      router.push("/");
-    }
-  }, [user, router]);
+    const verifyUser = async () => {
+      const validUser = await getUser();
+      if (validUser) {
+        setUser(validUser);
+        if (user?.role === "recruiter") {
+          router.push("/admin/companies");
+        } else if (user?.role === "student") {
+          router.push("/");
+        }
+      }
+    };
+    verifyUser();
+  }, [router, user?.role]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
@@ -58,11 +62,6 @@ const Login = () => {
       if (data.success) {
         toast(data.message);
         setUser(data.user);
-        if (user?.role === "recruiter") {
-          router.push("/admin/companies");
-        } else if (user?.role === "student") {
-          router.push("/");
-        }
       }
     } catch {
       toast.error("Error al iniciar sesión");

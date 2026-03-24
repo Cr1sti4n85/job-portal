@@ -22,7 +22,7 @@ export const filterData = [
   },
   {
     filterType: "Tipo de empleo",
-    filter: "location",
+    filter: "jobType",
     opts: [
       "Frontend",
       "Backend",
@@ -34,7 +34,7 @@ export const filterData = [
   },
   {
     filterType: "Sueldo",
-    filter: "location",
+    filter: "salary",
     opts: ["0-499999", "500000-999999", "1000000-1999999"],
   },
 ];

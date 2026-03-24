@@ -5,12 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-const Navbar = () => {
+const Navbar = ({ user }) => {
   const router = useRouter();
-  const [user, setUser] = useLocalStorage<LoggedUser | null>({
-    key: "userData",
-    defaultValue: null,
-  });
 
   const logOut = async () => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
@@ -18,7 +14,7 @@ const Navbar = () => {
       credentials: "include",
     });
     const data = await res.json();
-    setUser(null);
+    // setUser(null);
     if (data.success) {
       toast(data.message);
     }

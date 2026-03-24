@@ -23,4 +23,10 @@ export class AuthController {
   logout(@CurrentUser() user: User, @Res({ passthrough: true }) res: Response) {
     return this.authService.logout(user, res);
   }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  getProfile(@CurrentUser() user: User) {
+    return user;
+  }
 }

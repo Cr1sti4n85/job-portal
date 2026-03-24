@@ -2,6 +2,7 @@
 import { Profile } from "@/types/profile";
 import { Resume } from "@/types/resume";
 import axios, { AxiosError } from "axios";
+import { cookies } from "next/headers";
 
 export const RegisterUser = async (
   data: FormData,
@@ -95,5 +96,24 @@ export const LoginUser = async (data: FormData) => {
       };
     }
     return { error: "Error al intentar iniciar sesión" };
+  }
+};
+
+export const getUser = async () => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token");
+    const res = await fetch(`${process?.env.NEXT_PUBLIC_API_URL}/auth/me`, {
+      headers: {
+        Cookie: `access_token=${token?.value}`,
+      },
+      cache: "no-store",
+    });
+
+    if (!res.ok) return null;
+
+    return res.json();
+  } catch {
+    return null;
   }
 };

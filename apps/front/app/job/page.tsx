@@ -15,14 +15,15 @@ const FindJobsPage = async ({ searchParams }: FindJobsPageProps) => {
           <FilterJobs />
         </div>
         {!jobs?.length ? (
-          <div className="flex justify-center flex-col items-center w-full">
+          <div className="flex flex-col items-center w-full">
             <Image
               src={"/zero-results.webp"}
               alt="Zero Results"
-              width={500}
-              height={500}
+              width={300}
+              height={300}
               loading="eager"
             />
+            <p className="text-white">No se encontraron resultados</p>
           </div>
         ) : (
           <div className="flex-1 h-[88vh] overflow-y-auto no-scrollbar pb-5">

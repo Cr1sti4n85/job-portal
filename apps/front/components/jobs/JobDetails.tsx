@@ -2,17 +2,29 @@
 import { Job } from "@/types/jobs";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { useLocalStorage } from "@mantine/hooks";
 import { LoggedUser } from "@/types/user";
 import Image from "next/image";
 import { addToFavorites, applyToJob } from "@/actions/jobs";
 import { toast } from "sonner";
+import { useEffect, useState } from "react";
+import { getUser } from "@/actions/user";
+import { useRouter } from "next/navigation";
 
 const JobDetails = ({ job, jobId }: { job: Job; jobId: string }) => {
-  const [user] = useLocalStorage<LoggedUser | null>({
-    key: "userData",
-    defaultValue: null,
-  });
+  const [user, setUser] = useState<LoggedUser | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const verifyUser = async () => {
+      const validUser = await getUser();
+      if (validUser) {
+        setUser(validUser);
+      } else {
+        router.push("/login");
+      }
+    };
+    verifyUser();
+  }, [router]);
 
   const isApplied =
     job?.applications.some((app) => app.applicantId === user?.id) ?? false;

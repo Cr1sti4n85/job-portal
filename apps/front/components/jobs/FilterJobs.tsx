@@ -19,7 +19,7 @@ const FilterJobs = () => {
               {item.opts.map((option, idx) => (
                 <Link
                   key={idx}
-                  href={`/job?${item.filterType}`}
+                  href={`/job?${item.filter}=${option}`}
                   className="flex items-center my-5 cursor-pointer"
                 >
                   <Label htmlFor={idx.toString()} className="cursor-pointer">
