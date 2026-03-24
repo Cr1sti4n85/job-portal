@@ -1,6 +1,7 @@
 "use server";
 import { Profile } from "@/types/profile";
 import { Resume } from "@/types/resume";
+import { LoggedUser } from "@/types/user";
 import axios, { AxiosError } from "axios";
 import { cookies } from "next/headers";
 
@@ -112,7 +113,8 @@ export const getUser = async () => {
 
     if (!res.ok) return null;
 
-    return res.json();
+    const data = await res.json();
+    return data.user as LoggedUser;
   } catch {
     return null;
   }

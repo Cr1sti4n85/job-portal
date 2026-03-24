@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/select";
 
 import { LoggedUser } from "@/types/user";
-import { useLocalStorage } from "@mantine/hooks";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

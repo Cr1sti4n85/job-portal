@@ -1,11 +1,14 @@
 "use client";
 import { LoggedUser } from "@/types/user";
-import { useLocalStorage } from "@mantine/hooks";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-const Navbar = ({ user }) => {
+type NavbarProps = {
+  user: LoggedUser | null;
+};
+
+const Navbar = ({ user }: NavbarProps) => {
   const router = useRouter();
 
   const logOut = async () => {

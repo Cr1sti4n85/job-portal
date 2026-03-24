@@ -19,8 +19,6 @@ const JobDetails = ({ job, jobId }: { job: Job; jobId: string }) => {
       const validUser = await getUser();
       if (validUser) {
         setUser(validUser);
-      } else {
-        router.push("/login");
       }
     };
     verifyUser();

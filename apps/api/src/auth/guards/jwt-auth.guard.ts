@@ -16,7 +16,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
   handleRequest(_err: any, user: any, info: any) {
     if (info || !user) {
-      throw new UnauthorizedException('invalid_access_token');
+      throw new UnauthorizedException('No has iniciado sesión');
     }
     return user;
   }
