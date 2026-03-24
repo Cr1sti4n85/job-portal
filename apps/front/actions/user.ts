@@ -19,7 +19,7 @@ export const RegisterUser = async (
   const profileSkills = data.get("profileSkills")?.toString().split(",");
   const profileResume = resume?.profileResume;
   const profileResumeOriginalName = resume?.profileResumeOriginalName;
-  const role = data.get("role");
+  let role = data.get("role");
 
   if (
     !fullName ||
@@ -35,6 +35,8 @@ export const RegisterUser = async (
   ) {
     return { error: "Todos los campos son obligatorios" };
   }
+
+  role = role === "postulante" ? "applicant" : "recruiter";
 
   try {
     const res = await fetch(`${process?.env.NEXT_PUBLIC_API_URL}/user`, {
@@ -104,17 +106,19 @@ export const getUser = async () => {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("access_token");
+    console.log({ jwt: token });
+
     const res = await fetch(`${process?.env.NEXT_PUBLIC_API_URL}/auth/me`, {
       headers: {
         Cookie: `access_token=${token?.value}`,
       },
       cache: "no-store",
     });
-
     if (!res.ok) return null;
 
     const data = await res.json();
-    return data.user as LoggedUser;
+
+    return data;
   } catch {
     return null;
   }

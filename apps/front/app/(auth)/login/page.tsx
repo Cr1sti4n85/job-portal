@@ -12,14 +12,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { LoggedUser } from "@/types/user";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const Login = () => {
-  const [user, setUser] = useState<LoggedUser | null>(null);
   const router = useRouter();
   const [userData, setUserData] = useState<{
     email: string;
@@ -35,16 +33,15 @@ const Login = () => {
     const verifyUser = async () => {
       const validUser = await getUser();
       if (validUser) {
-        setUser(validUser);
-        if (user?.role === "recruiter") {
+        if (validUser?.role === "recruiter") {
           router.push("/admin/companies");
-        } else if (user?.role === "student") {
+        } else if (validUser?.role === "applicant") {
           router.push("/");
         }
       }
     };
     verifyUser();
-  }, [router, user?.role]);
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
@@ -60,7 +57,13 @@ const Login = () => {
       const data = await res.json();
       if (data.success) {
         toast(data.message);
-        setUser(data.user);
+        if (data.user.role === "recruiter") {
+          router.push("/admin/companies");
+        } else if (data.user.role === "applicant") {
+          router.push("/");
+        }
+      } else {
+        toast.error(data.message);
       }
     } catch {
       toast.error("Error al iniciar sesión");
@@ -109,7 +112,7 @@ const Login = () => {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Selecciona el rol</SelectLabel>
-                {["employee", "recruiter"].map((item, idx) => (
+                {["postulante", "reclutador"].map((item, idx) => (
                   <SelectItem key={idx} value={item}>
                     {item}
                   </SelectItem>

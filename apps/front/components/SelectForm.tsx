@@ -21,8 +21,8 @@ const SelectForm = ({ name, placeholder, list }: SelectFormProps) => {
           <SelectGroup>
             <SelectLabel>Selecciona el rol</SelectLabel>
             {list.map((item, idx) => (
-              <SelectItem key={idx} value={name === "role" ? item : ""}>
-                {name === "role" && item}
+              <SelectItem key={idx} value={item}>
+                {item}
               </SelectItem>
             ))}
           </SelectGroup>

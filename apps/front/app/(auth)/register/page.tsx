@@ -1,5 +1,5 @@
 "use client";
-import { RegisterUser } from "@/actions/user";
+import { getUser, RegisterUser } from "@/actions/user";
 import FormInput from "@/components/FormInput";
 import SelectForm from "@/components/SelectForm";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -8,8 +8,6 @@ import { Label } from "@/components/ui/label";
 import uploadFile from "@/lib/uploadFile";
 import { Profile } from "@/types/profile";
 import { Resume } from "@/types/resume";
-import { LoggedUser } from "@/types/user";
-import { useLocalStorage } from "@mantine/hooks";
 import { X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -18,15 +16,9 @@ import { toast } from "sonner";
 
 const Register = () => {
   const router = useRouter();
-
   const [profile, setProfile] = useState<Profile>({
     profileBio: "",
     profilePhoto: "",
-  });
-
-  const [user, setUser] = useLocalStorage<LoggedUser | null>({
-    key: "userData",
-    defaultValue: null,
   });
 
   const [resume, setResume] = useState<Resume>({
@@ -37,19 +29,25 @@ const Register = () => {
   const handleSubmit = async (formData: FormData) => {
     const res = await RegisterUser(formData, profile, resume);
     if (res?.error) {
-      toast.error(res.message);
+      toast.error(res.error);
     } else {
       router.push("/login");
     }
   };
 
   useEffect(() => {
-    if (user?.role === "recruiter") {
-      router.push("/admin/companies");
-    } else if (user?.role === "student") {
-      router.push("/");
-    }
-  }, []);
+    const verifyUser = async () => {
+      const validUser = await getUser();
+      if (validUser) {
+        if (validUser?.role === "recruiter") {
+          router.push("/admin/companies");
+        } else if (validUser?.role === "applicant") {
+          router.push("/");
+        }
+      }
+    };
+    verifyUser();
+  }, [router]);
 
   const handleUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -70,7 +68,6 @@ const Register = () => {
 
     if (type === "profile") {
       setProfile({ profileBio: name, profilePhoto: uploadedFile });
-      console.log({ uploadedFile });
       toast.success("Archivo subido con éxito");
     } else {
       setResume({
@@ -140,7 +137,7 @@ const Register = () => {
         )}
 
         <FormInput
-          label="Compentencias"
+          label="Competencias"
           type="text"
           name="profileSkills"
           placeholder="Ingresa tus compentecias separadas por comas"
@@ -182,7 +179,7 @@ const Register = () => {
         <SelectForm
           name="role"
           placeholder="Selecciona el rol"
-          list={["student", "recruiter"]}
+          list={["postulante", "reclutador"]}
         />
         <Button
           type="submit"

@@ -10,14 +10,12 @@ type NavbarProps = {
 
 const Navbar = ({ user }: NavbarProps) => {
   const router = useRouter();
-
   const logOut = async () => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
       cache: "no-cache",
       credentials: "include",
     });
     const data = await res.json();
-    // setUser(null);
     if (data.success) {
       toast(data.message);
     }
