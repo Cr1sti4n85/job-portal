@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { loginRequest } from "@/lib/apiRequests";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -46,15 +47,7 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-        credentials: "include",
-      });
-      const data = await res.json();
+      const data = await loginRequest(userData);
       if (data.success) {
         toast(data.message);
         if (data.user.role === "recruiter") {

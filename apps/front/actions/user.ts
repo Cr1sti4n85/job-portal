@@ -1,7 +1,6 @@
 "use server";
 import { Profile } from "@/types/profile";
 import { Resume } from "@/types/resume";
-import axios, { AxiosError } from "axios";
 import { cookies } from "next/headers";
 
 export const RegisterUser = async (
@@ -62,42 +61,6 @@ export const RegisterUser = async (
     return user;
   } catch {
     return { error: "Error al intentar registrar usuario" };
-  }
-};
-
-export const LoginUser = async (data: FormData) => {
-  const email = data.get("email");
-  const password = data.get("password");
-  const role = data.get("role");
-
-  if (!email || !password || !role) {
-    return { error: "Todos los campos son obligatorios" };
-  }
-
-  try {
-    const res = await axios.post(
-      `${process?.env.NEXT_PUBLIC_API_URL}/auth`,
-      {
-        email,
-        password,
-        role,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      },
-    );
-
-    return res.data;
-  } catch (error: any) {
-    if (error instanceof AxiosError) {
-      return {
-        error: error.response?.data?.message || "Error al iniciar sesión",
-      };
-    }
-    return { error: "Error al intentar iniciar sesión" };
   }
 };
 

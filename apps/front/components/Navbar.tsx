@@ -1,4 +1,5 @@
 "use client";
+import { logoutRequest } from "@/lib/apiRequests";
 import { LoggedUser } from "@/types/user";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,16 +12,12 @@ type NavbarProps = {
 const Navbar = ({ user }: NavbarProps) => {
   const router = useRouter();
   const logOut = async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
-      cache: "no-cache",
-      credentials: "include",
-    });
-    const data = await res.json();
+    const data = await logoutRequest();
     if (data.success) {
       toast(data.message);
+      router.push("/login");
+      router.refresh();
     }
-    router.push("/login");
-    router.refresh();
   };
 
   return (
