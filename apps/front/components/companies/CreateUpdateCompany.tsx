@@ -18,7 +18,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import uploadFile from "@/lib/uploadFile";
 import { toast } from "sonner";
-import { createCompanyRequest } from "@/lib/apiRequests";
+import { createCompanyRequest, updateCompanyRequest } from "@/lib/apiRequests";
 
 type Props = PropsWithChildren<{
   setCompanies: (companies: Company[]) => void;
@@ -32,28 +32,31 @@ const CreateUpdateCompany = ({
   companies,
   company,
 }: Props) => {
-  const [logo, setLogo] = useState<string>(company?.logo || "");
   const [open, setOpen] = useState<boolean>(false);
   const [companyData, setCompanyData] = useState<{
     name: string;
-    description: string;
-    website: string;
-    location: string;
-    logo: string;
-  }>({
-    name: "",
-    description: "",
-    website: "",
-    location: "",
-    logo: "",
-  });
+    description?: string;
+    website?: string;
+    location?: string;
+    logo?: string;
+  }>(company ? { ...company } : { name: "", description: "", website: "" });
 
-  const createNewCompany = async (e: React.FormEvent<HTMLFormElement>) => {
+  const companyHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const data = await createCompanyRequest(companyData);
+      const data = company?.id
+        ? await updateCompanyRequest(companyData, company.id)
+        : await createCompanyRequest(companyData);
       if (data.success) {
         toast.success(data.message);
+        if (company?.id) {
+          setCompanies(
+            companies?.map((c) => (c.id == data.company.id ? data.company : c)),
+          );
+        } else {
+          setCompanies([...companies, data.company]);
+        }
+
         setOpen(false);
       } else {
         toast.error(data.message);
@@ -82,7 +85,7 @@ const CreateUpdateCompany = ({
       toast.error("Error al subir el archivo");
       return;
     }
-    setLogo(uploadedFile);
+    setCompanyData({ ...companyData, logo: uploadedFile });
     toast.success("Archivo subido con éxito");
   };
 
@@ -98,14 +101,14 @@ const CreateUpdateCompany = ({
             Nombre de la compañía
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={createNewCompany}>
+        <form onSubmit={companyHandler}>
           <FormInput
             label="Nombre compañía"
             type="text"
             name="name"
             placeholder="Ingresa nombre"
+            // value={companyData.name}
             defaultValue={company?.name}
-            value={companyData.name}
             onChange={(e) =>
               setCompanyData({ ...companyData, name: e.target.value })
             }
@@ -116,7 +119,7 @@ const CreateUpdateCompany = ({
             name="description"
             placeholder="Ingresa una descripción"
             defaultValue={company?.description}
-            value={companyData.description}
+            // value={companyData.description}
             onChange={(e) =>
               setCompanyData({ ...companyData, description: e.target.value })
             }
@@ -127,7 +130,7 @@ const CreateUpdateCompany = ({
             name="website"
             placeholder="Ingresa la url del sitio web"
             defaultValue={company?.website}
-            value={companyData.website}
+            // value={companyData.website}
             onChange={(e) =>
               setCompanyData({ ...companyData, website: e.target.value })
             }
@@ -136,12 +139,12 @@ const CreateUpdateCompany = ({
             name="location"
             placeholder="Ingresa ubicación"
             list={locations}
-            data={companyData}
+            data={company}
             setData={setCompanyData}
           />
-          {logo && (
+          {company?.logo && (
             <Avatar className="w-20 h-20">
-              <AvatarImage src={logo} />
+              <AvatarImage src={company.logo} />
               <AvatarFallback>{company?.name.charAt(0)}</AvatarFallback>
             </Avatar>
           )}

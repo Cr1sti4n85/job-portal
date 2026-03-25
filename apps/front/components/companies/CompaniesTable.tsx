@@ -8,6 +8,17 @@ import { Company } from "@/types/company";
 import { getUser } from "@/actions/user";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const CompaniesTable = () => {
   const router = useRouter();
@@ -39,6 +50,44 @@ const CompaniesTable = () => {
           <Button variant="outline">Crear compañía</Button>
         </CreateUpdateCompany>
       </div>
+      <Table className="bg-white">
+        <TableCaption>Lista de tus compañías</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-25">Logo</TableHead>
+            <TableHead>Nombre</TableHead>
+            <TableHead>Fecha</TableHead>
+            <TableHead className="text-right">Acción</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {companies?.length
+            ? companies?.map((company) => (
+                <TableRow key={company.id}>
+                  <TableCell className="font-medium">
+                    <Avatar>
+                      <AvatarImage src={company.logo} />
+                      <AvatarFallback>{company.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                  </TableCell>
+                  <TableCell>{company.name}</TableCell>
+                  <TableCell>
+                    {company.createdAt.toString().split("T")[0]}
+                  </TableCell>
+                  <TableCell className="float-right cursor-pointer">
+                    <CreateUpdateCompany
+                      setCompanies={setCompanies}
+                      companies={companies}
+                      company={company}
+                    >
+                      <Button variant="outline">Editar</Button>
+                    </CreateUpdateCompany>
+                  </TableCell>
+                </TableRow>
+              ))
+            : null}
+        </TableBody>
+      </Table>
     </>
   );
 };

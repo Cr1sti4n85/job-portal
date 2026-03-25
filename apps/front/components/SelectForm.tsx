@@ -22,6 +22,7 @@ const SelectForm = <T,>({
       <Select
         name={String(name)}
         value={data && (data[name] as string)}
+        // defaultValue={data && (data[name] as string)}
         onValueChange={(value) =>
           setData &&
           setData((prev) => ({

@@ -5,4 +5,5 @@ export type Company = {
   website?: string;
   location?: string;
   logo?: string;
+  createdAt: Date;
 };

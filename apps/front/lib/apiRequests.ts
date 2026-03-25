@@ -23,16 +23,58 @@ export const logoutRequest = async () => {
   return res.json();
 };
 
-//addCompany
+type CompanyResponse = {
+  company: Company;
+  message: string;
+  success: boolean;
+};
+
+//Company
 export const createCompanyRequest = async (companyData: Partial<Company>) => {
+  const { name, description, logo, website, location } = companyData;
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/company`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     credentials: "include",
-    body: JSON.stringify(companyData),
+    body: JSON.stringify({
+      name,
+      description: description || undefined,
+      logo: logo || undefined,
+      website: website || undefined,
+      location: location || undefined,
+    }),
   });
 
-  return res.json();
+  const data: CompanyResponse = await res.json();
+
+  return data;
+};
+
+export const updateCompanyRequest = async (
+  companyData: Partial<Company>,
+  companyId: string,
+) => {
+  const { name, description, logo, website, location } = companyData;
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/company/${companyId}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        name,
+        description: description || undefined,
+        logo: logo || undefined,
+        website: website || undefined,
+        location: location || undefined,
+      }),
+    },
+  );
+  const data: CompanyResponse = await res.json();
+
+  return data;
 };
