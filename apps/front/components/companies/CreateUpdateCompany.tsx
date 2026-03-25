@@ -4,7 +4,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -19,6 +18,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import uploadFile from "@/lib/uploadFile";
 import { toast } from "sonner";
+import { createCompanyRequest } from "@/lib/apiRequests";
 
 type Props = PropsWithChildren<{
   setCompanies: (companies: Company[]) => void;
@@ -33,81 +33,129 @@ const CreateUpdateCompany = ({
   company,
 }: Props) => {
   const [logo, setLogo] = useState<string>(company?.logo || "");
-  const createNewCompany = async (formData: FormData) => {};
+  const [open, setOpen] = useState<boolean>(false);
+  const [companyData, setCompanyData] = useState<{
+    name: string;
+    description: string;
+    website: string;
+    location: string;
+    logo: string;
+  }>({
+    name: "",
+    description: "",
+    website: "",
+    location: "",
+    logo: "",
+  });
+
+  const createNewCompany = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const data = await createCompanyRequest(companyData);
+      if (data.success) {
+        toast.success(data.message);
+        setOpen(false);
+      } else {
+        toast.error(data.message);
+      }
+    } catch {
+      toast.error("Ocurrió un error");
+    } finally {
+      setCompanyData({
+        name: "",
+        description: "",
+        website: "",
+        location: "",
+        logo: "",
+      });
+    }
+  };
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     const name = file?.name?.split(".")?.[0];
-
     if (!file || !name) {
       return;
     }
     const uploadedFile = await uploadFile(file);
-
     if (!uploadedFile) {
       toast.error("Error al subir el archivo");
       return;
     }
-
     setLogo(uploadedFile);
     toast.success("Archivo subido con éxito");
   };
 
   return (
-    <Dialog>
-      <form>
-        <DialogTrigger className="bg-yellow-400 p-2 rounded text-white">
-          {children}
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-sm">
-          <DialogHeader>
-            <DialogTitle>{children}</DialogTitle>
-            <DialogDescription className="my-10 text-center font-bold text-yellow-400 text-2xl">
-              Nombre de la compañía
-            </DialogDescription>
-            <FormInput
-              label="Nombre compañía"
-              type="text"
-              name="name"
-              placeholder="Ingresa nombre"
-              defaultValue={company?.name}
-            />
-            <FormInput
-              label="Descripción"
-              type="text"
-              name="description"
-              placeholder="Ingresa una descripción"
-              defaultValue={company?.description}
-            />
-            <FormInput
-              label="Sitio web"
-              type="text"
-              name="website"
-              placeholder="Ingresa la url del sitio web"
-              defaultValue={company?.website}
-            />
-            <SelectForm
-              name="location"
-              placeholder="Ingresa ubicación"
-              list={locations}
-            />
-            {logo && (
-              <Avatar className="w-20 h-20">
-                <AvatarImage src={logo} />
-                <AvatarFallback>{company?.name.charAt(0)}</AvatarFallback>
-              </Avatar>
-            )}
-            <div>
-              <Label htmlFor="logo">Upload logo</Label>
-              <Input id="logo" type="file" onChange={handleUpload}></Input>
-            </div>
-          </DialogHeader>
-
-          <DialogFooter>
-            <Button type="submit">Save changes</Button>
-          </DialogFooter>
-        </DialogContent>
-      </form>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild className="bg-yellow-400 p-2 rounded text-white">
+        {children}
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-sm">
+        <DialogHeader>
+          <DialogTitle>{children}</DialogTitle>
+          <DialogDescription className="my-10 text-center font-bold text-yellow-400 text-2xl">
+            Nombre de la compañía
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={createNewCompany}>
+          <FormInput
+            label="Nombre compañía"
+            type="text"
+            name="name"
+            placeholder="Ingresa nombre"
+            defaultValue={company?.name}
+            value={companyData.name}
+            onChange={(e) =>
+              setCompanyData({ ...companyData, name: e.target.value })
+            }
+          />
+          <FormInput
+            label="Descripción"
+            type="text"
+            name="description"
+            placeholder="Ingresa una descripción"
+            defaultValue={company?.description}
+            value={companyData.description}
+            onChange={(e) =>
+              setCompanyData({ ...companyData, description: e.target.value })
+            }
+          />
+          <FormInput
+            label="Sitio web"
+            type="text"
+            name="website"
+            placeholder="Ingresa la url del sitio web"
+            defaultValue={company?.website}
+            value={companyData.website}
+            onChange={(e) =>
+              setCompanyData({ ...companyData, website: e.target.value })
+            }
+          />
+          <SelectForm
+            name="location"
+            placeholder="Ingresa ubicación"
+            list={locations}
+            data={companyData}
+            setData={setCompanyData}
+          />
+          {logo && (
+            <Avatar className="w-20 h-20">
+              <AvatarImage src={logo} />
+              <AvatarFallback>{company?.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+          )}
+          <div className="">
+            <Label htmlFor="logo">Subir logo</Label>
+            <Input id="logo" type="file" onChange={handleUpload} />
+          </div>
+          <div className="flex justify-end mt-2">
+            <Button type="submit" className="p-2">
+              Enviar
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
     </Dialog>
   );
 };

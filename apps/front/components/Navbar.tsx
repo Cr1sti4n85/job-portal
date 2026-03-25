@@ -20,6 +20,7 @@ const Navbar = ({ user }: NavbarProps) => {
       toast(data.message);
     }
     router.push("/login");
+    router.refresh();
   };
 
   return (

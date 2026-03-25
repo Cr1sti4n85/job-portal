@@ -34,7 +34,7 @@ export class CompanyService {
 
     return {
       message: 'Empresa creada exitosamente',
-      succes: true,
+      success: true,
       company,
     };
   }

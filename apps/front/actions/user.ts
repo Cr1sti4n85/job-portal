@@ -1,7 +1,6 @@
 "use server";
 import { Profile } from "@/types/profile";
 import { Resume } from "@/types/resume";
-import { LoggedUser } from "@/types/user";
 import axios, { AxiosError } from "axios";
 import { cookies } from "next/headers";
 
@@ -106,7 +105,6 @@ export const getUser = async () => {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("access_token");
-    console.log({ jwt: token });
 
     const res = await fetch(`${process?.env.NEXT_PUBLIC_API_URL}/auth/me`, {
       headers: {

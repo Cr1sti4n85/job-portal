@@ -34,7 +34,7 @@ const Login = () => {
       const validUser = await getUser();
       if (validUser) {
         if (validUser?.role === "recruiter") {
-          router.push("/admin/companies");
+          router.push("/dashboard/companies");
         } else if (validUser?.role === "applicant") {
           router.push("/");
         }
@@ -58,10 +58,11 @@ const Login = () => {
       if (data.success) {
         toast(data.message);
         if (data.user.role === "recruiter") {
-          router.push("/admin/companies");
+          router.push("/dashboard/companies");
         } else if (data.user.role === "applicant") {
           router.push("/");
         }
+        router.refresh();
       } else {
         toast.error(data.message);
       }

@@ -40,7 +40,7 @@ const Register = () => {
       const validUser = await getUser();
       if (validUser) {
         if (validUser?.role === "recruiter") {
-          router.push("/admin/companies");
+          router.push("/dashboard/companies");
         } else if (validUser?.role === "applicant") {
           router.push("/");
         }

@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 import {
   Select,
   SelectContent,
@@ -10,10 +10,26 @@ import {
 } from "./ui/select";
 import { SelectFormProps } from "@/types/selectForm";
 
-const SelectForm = ({ name, placeholder, list }: SelectFormProps) => {
+const SelectForm = <T,>({
+  name,
+  placeholder,
+  list,
+  data,
+  setData,
+}: SelectFormProps<T>) => {
   return (
     <div className="my-3">
-      <Select name={name}>
+      <Select
+        name={String(name)}
+        value={data && (data[name] as string)}
+        onValueChange={(value) =>
+          setData &&
+          setData((prev) => ({
+            ...prev,
+            [name]: value,
+          }))
+        }
+      >
         <SelectTrigger className="w-full">
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
