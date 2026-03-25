@@ -91,12 +91,10 @@ const CreateUpdateCompany = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild className="bg-yellow-400 p-2 rounded text-white">
-        {children}
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle>{children}</DialogTitle>
+          <DialogTitle>Crear/Modificar</DialogTitle>
           <DialogDescription className="my-10 text-center font-bold text-yellow-400 text-2xl">
             Nombre de la compañía
           </DialogDescription>
@@ -107,7 +105,6 @@ const CreateUpdateCompany = ({
             type="text"
             name="name"
             placeholder="Ingresa nombre"
-            // value={companyData.name}
             defaultValue={company?.name}
             onChange={(e) =>
               setCompanyData({ ...companyData, name: e.target.value })
@@ -119,7 +116,6 @@ const CreateUpdateCompany = ({
             name="description"
             placeholder="Ingresa una descripción"
             defaultValue={company?.description}
-            // value={companyData.description}
             onChange={(e) =>
               setCompanyData({ ...companyData, description: e.target.value })
             }
@@ -130,7 +126,6 @@ const CreateUpdateCompany = ({
             name="website"
             placeholder="Ingresa la url del sitio web"
             defaultValue={company?.website}
-            // value={companyData.website}
             onChange={(e) =>
               setCompanyData({ ...companyData, website: e.target.value })
             }
@@ -144,7 +139,7 @@ const CreateUpdateCompany = ({
           />
           {company?.logo && (
             <Avatar className="w-20 h-20">
-              <AvatarImage src={company.logo} />
+              <AvatarImage src={company?.logo} />
               <AvatarFallback>{company?.name.charAt(0)}</AvatarFallback>
             </Avatar>
           )}

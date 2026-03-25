@@ -19,6 +19,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import DeleteCompany from "./DeleteCompany";
+import { Edit2, X } from "lucide-react";
 
 const CompaniesTable = () => {
   const router = useRouter();
@@ -47,7 +49,9 @@ const CompaniesTable = () => {
       <div className="flex items-center justify-between my-5">
         <Input className="w-fit bg-white" placeholder="Filtrar por nombre" />
         <CreateUpdateCompany setCompanies={setCompanies} companies={companies}>
-          <Button variant="outline">Crear compañía</Button>
+          <Button variant="outline" className="bg-yellow-500 text-white">
+            Crear compañía
+          </Button>
         </CreateUpdateCompany>
       </div>
       <Table className="bg-white">
@@ -74,14 +78,21 @@ const CompaniesTable = () => {
                   <TableCell>
                     {company.createdAt.toString().split("T")[0]}
                   </TableCell>
-                  <TableCell className="float-right cursor-pointer">
+                  <TableCell className="float-right cursor-pointer flex items-center gap-2">
                     <CreateUpdateCompany
                       setCompanies={setCompanies}
                       companies={companies}
                       company={company}
                     >
-                      <Button variant="outline">Editar</Button>
+                      <Edit2 className="bg-yellow-500 text-white p-1 rounded-md h-7 w-7" />
                     </CreateUpdateCompany>
+                    <DeleteCompany
+                      company={company}
+                      setCompanies={setCompanies}
+                      companies={companies}
+                    >
+                      <X className="bg-red-700 text-white p-1 rounded-md h-7 w-7" />
+                    </DeleteCompany>
                   </TableCell>
                 </TableRow>
               ))

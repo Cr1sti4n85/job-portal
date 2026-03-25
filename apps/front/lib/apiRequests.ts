@@ -78,3 +78,19 @@ export const updateCompanyRequest = async (
 
   return data;
 };
+
+export const deleteCompanyRequest = async (companyId: string) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/company/${companyId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    },
+  );
+  const data: CompanyResponse = await res.json();
+
+  return data;
+};
