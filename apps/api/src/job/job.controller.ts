@@ -37,11 +37,6 @@ export class JobController {
     return this.jobService.findOne(jobId);
   }
 
-  @Get()
-  getJobByUserId(@CurrentUser() user: User) {
-    return this.jobService.findByUserId(user.id);
-  }
-
   @Post('favorites/:id')
   @UseGuards(JwtAuthGuard)
   addFavoriteJob(@CurrentUser() user: User, @Param('id') jobId: string) {

@@ -1,4 +1,5 @@
 "use client";
+import { Label } from "./ui/label";
 import {
   Select,
   SelectContent,
@@ -16,9 +17,13 @@ const SelectForm = <T,>({
   list,
   data,
   setData,
+  label,
 }: SelectFormProps<T>) => {
   return (
     <div className="my-3">
+      <Label htmlFor={String(name)} className="mb-2">
+        {label}
+      </Label>
       <Select
         name={String(name)}
         value={data && (data[name] as string)}

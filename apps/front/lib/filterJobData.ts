@@ -16,14 +16,19 @@ export const locations = [
   "XV Región",
 ];
 
-export const jobs = [
+export const jobsList = [
   "Frontend",
   "Backend",
   "Full Stack",
   "Data Science",
   "DevOps",
   "UI/UX Design",
+  "QA",
+  "Mobile",
+  "Otro",
 ];
+
+export const experience = ["trainee", "junior", "semi-senior", "senior"];
 
 export const salaries = ["0-499999", "500000-999999", "1000000-1999999"];
 
@@ -36,7 +41,7 @@ export const filterData = [
   {
     filterType: "Tipo de empleo",
     filter: "jobType",
-    opts: jobs,
+    opts: jobsList,
   },
   {
     filterType: "Sueldo",

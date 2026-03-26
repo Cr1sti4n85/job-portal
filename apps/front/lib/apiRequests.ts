@@ -1,4 +1,5 @@
 import { Company } from "@/types/company";
+import { Job } from "@/types/jobs";
 import { LoggedUser } from "@/types/user";
 
 //Login
@@ -91,6 +92,58 @@ export const deleteCompanyRequest = async (companyId: string) => {
     },
   );
   const data: CompanyResponse = await res.json();
+
+  return data;
+};
+
+//Jobs
+
+type JobResponse = {
+  job: Job;
+  message: string;
+  success: boolean;
+};
+export const createJobRequest = async (jobData: Partial<Job>) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/job`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(jobData),
+  });
+
+  const data: JobResponse = await res.json();
+
+  return data;
+};
+
+export const updateJobRequest = async (
+  jobData: Partial<Job>,
+  jobId: string,
+) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/job/${jobId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(jobData),
+  });
+  const data: JobResponse = await res.json();
+
+  return data;
+};
+
+export const deleteJobRequest = async (jobId: string) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/job/${jobId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+  const data: JobResponse = await res.json();
 
   return data;
 };

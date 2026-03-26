@@ -40,10 +40,10 @@ const Navbar = ({ user }: NavbarProps) => {
                 {user.role === "recruiter" ? (
                   <>
                     <li className="hover:text-yellow-400 duration-300 cursor-pointer">
-                      <Link href="dashboard/companies">Compañías</Link>
+                      <Link href="/dashboard/companies">Compañías</Link>
                     </li>
                     <li className="hover:text-yellow-400 duration-300 cursor-pointer">
-                      <Link href="dashboard/empleos">Empleos</Link>
+                      <Link href="/dashboard/jobs">Empleos</Link>
                     </li>
                   </>
                 ) : (
@@ -52,7 +52,7 @@ const Navbar = ({ user }: NavbarProps) => {
                       <Link href="/find-jobs">Encontrar empleos</Link>
                     </li>
                     <li className="hover:text-yellow-400 duration-300 cursor-pointer">
-                      <Link href="dashboard/favorites">Favoritos</Link>
+                      <Link href="/dashboard/favorites">Favoritos</Link>
                     </li>
                   </>
                 )}

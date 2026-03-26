@@ -12,6 +12,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './auth/auth.module';
 import { APP_PIPE } from '@nestjs/core';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   controllers: [AppController],
@@ -44,6 +45,7 @@ import { APP_PIPE } from '@nestjs/core';
     JobModule,
     ApplicationModule,
     AuthModule,
+    AdminModule,
   ],
 })
 export class AppModule {}

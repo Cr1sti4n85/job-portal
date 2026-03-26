@@ -106,3 +106,23 @@ export const getJobBySearch = async ({
     return { error: error.message };
   }
 };
+
+export const getJobsByUserId = async () => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token");
+    const res = await API.get(`${process.env.NEXT_PUBLIC_API_URL}/admin/jobs`, {
+      headers: {
+        Cookie: `access_token=${token?.value}`,
+      },
+    });
+    revalidatePath("/dashboard/jobs");
+    return res.data;
+  } catch (e: AxiosError | unknown) {
+    if (e instanceof AxiosError) {
+      return { error: e?.response?.data?.message || e.message };
+    } else {
+      return { error: "Error al obtener empleos" };
+    }
+  }
+};
