@@ -172,7 +172,13 @@ const CreateUpdateJob = ({ children, setJobs, jobs, job }: Props) => {
               <Label htmlFor="companyId" className="mb-2">
                 Empresa
               </Label>
-              <Select name="companyId" defaultValue={job?.companyId}>
+              <Select
+                name="companyId"
+                defaultValue={job?.companyId}
+                onValueChange={(value) =>
+                  setJobData({ ...jobData, companyId: value })
+                }
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Selecciona la empresa" />
                 </SelectTrigger>

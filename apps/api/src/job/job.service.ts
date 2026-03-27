@@ -174,7 +174,16 @@ export class JobService {
     return `This action updates a #${id} job`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} job`;
+  async remove(id: string) {
+    const deletedCompany = await this.prismaService.job.delete({
+      where: { id },
+    });
+    if (!deletedCompany) {
+      throw new NotFoundException('Empleo no encontrada');
+    }
+    return {
+      success: true,
+      message: 'Empleo eliminado exitosamente',
+    };
   }
 }

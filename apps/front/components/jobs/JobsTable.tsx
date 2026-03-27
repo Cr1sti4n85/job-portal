@@ -14,11 +14,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Edit2, X } from "lucide-react";
 import { getJobsByUserId } from "@/actions/jobs";
 import { Job } from "@/types/jobs";
 import CreateUpdateJob from "./CreateUpdateJob";
+import DeleteJob from "./DeleteJob";
 
 const JobsTable = () => {
   const router = useRouter();
@@ -56,9 +56,13 @@ const JobsTable = () => {
         <TableCaption>Lista de tus empleos</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-25">Logo</TableHead>
-            <TableHead>Nombre</TableHead>
+            <TableHead>Empresa</TableHead>
+            <TableHead>Rol</TableHead>
+            <TableHead>Ubicación</TableHead>
+            <TableHead>Experiencia</TableHead>
+            <TableHead>Sueldo</TableHead>
             <TableHead>Fecha</TableHead>
+            <TableHead>Vacantes</TableHead>
             <TableHead className="text-right">Acción</TableHead>
           </TableRow>
         </TableHeader>
@@ -67,23 +71,25 @@ const JobsTable = () => {
             ? jobs?.map((job) => (
                 <TableRow key={job.id}>
                   <TableCell className="font-medium">
-                    {/* <Avatar>
-                      <AvatarImage src={job.logo} />
-                      <AvatarFallback>{job.name.charAt(0)}</AvatarFallback>
-                    </Avatar> */}
+                    {job.company.name}
                   </TableCell>
-                  {/* <TableCell>{job.name}</TableCell> */}
+                  <TableCell>{job.title}</TableCell>
+                  <TableCell>{job.location}</TableCell>
+                  <TableCell>{job.experienceLevel}</TableCell>
+                  <TableCell>${job.salary}</TableCell>
                   <TableCell>
-                    {job.createdAt.toString().split("T")[0]}
+                    {job.createdAt.toString().split("T")?.[0]}
                   </TableCell>
+                  <TableCell>{job.position}</TableCell>
                   <TableCell className="float-right cursor-pointer flex items-center gap-2">
                     <CreateUpdateJob setJobs={setJobs} jobs={jobs} job={job}>
                       <Edit2 className="bg-yellow-500 text-white p-1 rounded-md h-7 w-7" />
                     </CreateUpdateJob>
-                    {/* <DeleteJob job={job} setJobs={setJobs} jobs={jobs}>
-                      <X className="bg-red-700 text-white p-1 rounded-md h-7 w-7" />
-                    </DeleteJob> */}
+                    <DeleteJob job={job} setJobs={setJobs} jobs={jobs}>
+                      <X className="bg-red-700 text-white p-1 rounded-md h-7 w-7 cursor-pointer" />
+                    </DeleteJob>
                   </TableCell>
+                  <TableCell className="float-right cursor-pointer"></TableCell>
                 </TableRow>
               ))
             : null}

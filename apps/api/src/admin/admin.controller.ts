@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/common/current-user.decorator';
 import type { User } from 'src/types/current-user';
@@ -12,5 +12,11 @@ export class AdminController {
   @UseGuards(JwtAuthGuard)
   getJobByUserId(@CurrentUser() user: User) {
     return this.jobService.findByUserId(user.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/jobs/:id')
+  remove(@Param('id') id: string) {
+    return this.jobService.remove(id);
   }
 }

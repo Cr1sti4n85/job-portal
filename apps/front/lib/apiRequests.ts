@@ -136,13 +136,16 @@ export const updateJobRequest = async (
 };
 
 export const deleteJobRequest = async (jobId: string) => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/job/${jobId}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/jobs/${jobId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
     },
-    credentials: "include",
-  });
+  );
   const data: JobResponse = await res.json();
 
   return data;
