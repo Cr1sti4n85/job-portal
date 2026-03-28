@@ -14,7 +14,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit2, X } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Edit2, Eye, MoreHorizontal, X } from "lucide-react";
 import { getJobsByUserId } from "@/actions/jobs";
 import { Job } from "@/types/jobs";
 import CreateUpdateJob from "./CreateUpdateJob";
@@ -59,10 +64,8 @@ const JobsTable = () => {
             <TableHead>Empresa</TableHead>
             <TableHead>Rol</TableHead>
             <TableHead>Ubicación</TableHead>
-            <TableHead>Experiencia</TableHead>
-            <TableHead>Sueldo</TableHead>
             <TableHead>Fecha</TableHead>
-            <TableHead>Vacantes</TableHead>
+            <TableHead>Postulantes</TableHead>
             <TableHead className="text-right">Acción</TableHead>
           </TableRow>
         </TableHeader>
@@ -75,13 +78,10 @@ const JobsTable = () => {
                   </TableCell>
                   <TableCell>{job.title}</TableCell>
                   <TableCell>{job.location}</TableCell>
-                  <TableCell>{job.experienceLevel}</TableCell>
-                  <TableCell>${job.salary}</TableCell>
                   <TableCell>
                     {job.createdAt.toString().split("T")?.[0]}
                   </TableCell>
-                  <TableCell>{job.position}</TableCell>
-                  <TableCell className="float-right cursor-pointer flex items-center gap-2">
+                  <TableCell className="cursor-pointer flex items-center gap-2">
                     <CreateUpdateJob setJobs={setJobs} jobs={jobs} job={job}>
                       <Edit2 className="bg-yellow-500 text-white p-1 rounded-md h-7 w-7" />
                     </CreateUpdateJob>
@@ -89,7 +89,26 @@ const JobsTable = () => {
                       <X className="bg-red-700 text-white p-1 rounded-md h-7 w-7 cursor-pointer" />
                     </DeleteJob>
                   </TableCell>
-                  <TableCell className="float-right cursor-pointer"></TableCell>
+                  <TableCell className="cursor-pointer">
+                    <div className="flex gap-6">
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <MoreHorizontal />
+                        </PopoverTrigger>
+                        <PopoverContent
+                          className="w-40"
+                          onClick={() => {
+                            router.push(`/dashboard/jobs/${job.id}`);
+                          }}
+                        >
+                          <div className="flex w-fit items-center gap-2 cursor-pointer mt-2">
+                            <Eye className="w-4" />
+                            <span>Postulantes</span>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))
             : null}

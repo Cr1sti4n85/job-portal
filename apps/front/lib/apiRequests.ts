@@ -1,3 +1,4 @@
+import { Application } from "@/types/application";
 import { Company } from "@/types/company";
 import { Job } from "@/types/jobs";
 import { LoggedUser } from "@/types/user";
@@ -148,5 +149,32 @@ export const deleteJobRequest = async (jobId: string) => {
   );
   const data: JobResponse = await res.json();
 
+  return data;
+};
+
+//Applications
+type ApplicationResponse = {
+  applications: Application;
+  message: string;
+  success: boolean;
+};
+
+export const updateStatusRequest = async (
+  applicationId: string,
+  status: string,
+) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/application/${applicationId}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ status }),
+      cache: "no-cache",
+    },
+  );
+  const data: ApplicationResponse = await res.json();
   return data;
 };
