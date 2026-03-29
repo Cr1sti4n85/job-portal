@@ -1,6 +1,6 @@
 import { Job } from "@/types/jobs";
-import LatestJobsCard from "../LatestJobsCard";
 import Link from "next/link";
+import LatestJobsCard from "../jobs/LatestJobsCard";
 
 const LatestJobs = ({ jobs }: { jobs: Job[] }) => {
   return (

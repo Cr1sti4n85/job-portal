@@ -1,6 +1,6 @@
 import { Job } from "@/types/jobs";
 import Image from "next/image";
-import { Badge } from "./ui/badge";
+import { Badge } from "../ui/badge";
 
 const LatestJobsCard = ({ job }: { job: Job }) => {
   return (

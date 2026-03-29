@@ -9,13 +9,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Application } from "@/types/application";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { MoreHorizontal } from "lucide-react";
 import { updateStatusRequest } from "@/lib/apiRequests";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Link from "next/link";
+import { GrDocumentCloud } from "react-icons/gr";
 
 type Props = {
   applications: Application[];
@@ -42,8 +43,8 @@ const ApplicantsTable = ({ applications }: Props) => {
         <TableRow>
           <TableHead>Nombre</TableHead>
           <TableHead>Contacto</TableHead>
-          <TableHead>Imagen</TableHead>
           <TableHead>Fecha</TableHead>
+          <TableHead>CV</TableHead>
           <TableHead>Estado</TableHead>
           <TableHead className="text-right">Acción</TableHead>
         </TableRow>
@@ -56,19 +57,17 @@ const ApplicantsTable = ({ applications }: Props) => {
                   {application.applicant.fullName}
                 </TableCell>
                 <TableCell>{application.applicant.email}</TableCell>
-                <TableCell className="font-medium">
-                  <Avatar>
-                    <AvatarImage
-                      src={application.applicant.profilePhoto}
-                      alt="applicant photo"
-                    />
-                    <AvatarFallback>
-                      {application.applicant.fullName.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                </TableCell>
+
                 <TableCell>
                   {application.createdAt.toString().split("T")[0]}
+                </TableCell>
+                <TableCell>
+                  <Link
+                    href={application.applicant.profileResume || "#"}
+                    target="_blank"
+                  >
+                    <GrDocumentCloud size={24} className="text-red-500" />
+                  </Link>
                 </TableCell>
                 <TableCell>{application.status}</TableCell>
                 <TableCell className="cursor-pointer float-end">

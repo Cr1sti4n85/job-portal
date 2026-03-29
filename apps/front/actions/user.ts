@@ -1,6 +1,7 @@
 "use server";
 import { Profile } from "@/types/profile";
 import { Resume } from "@/types/resume";
+import { LoggedUser } from "@/types/user";
 import { cookies } from "next/headers";
 
 export const RegisterUser = async (
@@ -77,7 +78,7 @@ export const getUser = async () => {
     });
     if (!res.ok) return null;
 
-    const data = await res.json();
+    const data: LoggedUser = await res.json();
 
     return data;
   } catch {
