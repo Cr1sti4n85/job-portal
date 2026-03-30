@@ -1,10 +1,11 @@
+import { getUser } from "@/actions/user";
 import UserDetails from "@/components/user/UserDetails";
-import React from "react";
 
-const ProfilePage = () => {
+const ProfilePage = async () => {
+  const user = await getUser();
   return (
     <div>
-      <UserDetails />
+      <UserDetails user={user} />
     </div>
   );
 };

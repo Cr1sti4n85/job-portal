@@ -2,6 +2,7 @@
 import { Profile } from "@/types/profile";
 import { Resume } from "@/types/resume";
 import { LoggedUser } from "@/types/user";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 export const RegisterUser = async (
@@ -82,6 +83,57 @@ export const getUser = async () => {
 
     return data;
   } catch {
+    return null;
+  }
+};
+
+// update user profile
+export const updateUserProfile = async (
+  data: FormData,
+  profilePhoto: string,
+  profileResume: string,
+) => {
+  const fullName = data.get("fullName");
+  const phoneNumber = data.get("phoneNumber");
+  const email = data.get("email");
+  const profileSkills = data.get("profileSkills")?.toString().split(",");
+
+  if (!fullName || !phoneNumber || !email) {
+    return {
+      error: "El nombre, el email y el contacto telefónico son obligatorios",
+    };
+  }
+
+  type UpdateUserResponse = {
+    user: LoggedUser;
+    success: boolean;
+    message: string;
+  };
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token");
+    const res = await fetch(`${process?.env.NEXT_PUBLIC_API_URL}/user`, {
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `access_token=${token?.value}`,
+      },
+      method: "PUT",
+      body: JSON.stringify({
+        fullName,
+        phoneNumber,
+        email,
+        profilePhoto,
+        profileSkills: profileSkills || undefined,
+        profileResume,
+      }),
+      cache: "no-store",
+    });
+    const data = await res.json();
+    revalidatePath("/profile");
+    return data;
+  } catch (error) {
+    console.log(error);
+
     return null;
   }
 };

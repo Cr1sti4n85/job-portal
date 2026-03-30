@@ -86,6 +86,10 @@ export class UserService {
       },
     });
 
-    return updatedUser;
+    return {
+      user: updatedUser,
+      success: true,
+      message: 'Usuario actualizado exitosamente',
+    };
   }
 }
