@@ -164,9 +164,11 @@ export class JobService {
     if (!favoriteJobs || favoriteJobs.length === 0) {
       throw new NotFoundException('Tu lista de favoritos está vacía');
     }
+    const jobs = favoriteJobs.map((fav) => fav.job);
     return {
       success: true,
-      favoriteJobs,
+      message: 'Se ha obtenido tu lista de favoritos',
+      jobs,
     };
   }
 

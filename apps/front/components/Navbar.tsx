@@ -52,7 +52,7 @@ const Navbar = ({ user }: NavbarProps) => {
                       <Link href="/find-jobs">Encontrar empleos</Link>
                     </li>
                     <li className="hover:text-yellow-400 duration-300 cursor-pointer">
-                      <Link href="/dashboard/favorites">Favoritos</Link>
+                      <Link href="/favorites">Favoritos</Link>
                     </li>
                   </>
                 )}

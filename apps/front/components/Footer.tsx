@@ -9,7 +9,7 @@ const Footer = () => {
           <div className="mb-4 md:mb-0">
             <h2 className="text-xl font-bold">BuscaPega</h2>
             <p className="text-sm text-gray-500">
-              © 2024 Todos los derechos reservados.
+              © {new Date().getFullYear()} Todos los derechos reservados.
             </p>
           </div>
           <div className="flex space-x-4 md:mt-0">

@@ -1,6 +1,6 @@
 "use server";
 import API from "@/config/http";
-import { Job } from "@/types/jobs";
+import { FavoriteJobs, Job } from "@/types/jobs";
 import { AxiosError } from "axios";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -123,6 +123,37 @@ export const getJobsByUserId = async () => {
       return { error: e?.response?.data?.message || e.message };
     } else {
       return { error: "Error al obtener empleos" };
+    }
+  }
+};
+
+type UserFavoritesResponse = {
+  success: boolean;
+  message: string;
+  error?: string;
+  jobs: Job[];
+};
+export const getUserFavorites = async () => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token");
+    const res = await API.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/job/favorites/all`,
+      {
+        headers: {
+          Cookie: `access_token=${token?.value}`,
+        },
+      },
+    );
+    const data: UserFavoritesResponse = res.data;
+    return data;
+  } catch (e: AxiosError | unknown) {
+    if (e instanceof AxiosError) {
+      return {
+        error: e?.response?.data?.message || e.message,
+      } as UserFavoritesResponse;
+    } else {
+      return { error: "Error al obtener empleos" } as UserFavoritesResponse;
     }
   }
 };

@@ -27,3 +27,12 @@ export type FindJobsPageProps = {
     salary?: string;
   }>;
 };
+
+export type FavoriteJobs = {
+  id: string;
+  jobId: string;
+  userId: string;
+  createdAt: Date;
+  updatedAt: DataTransfer;
+  job: Job[];
+};
