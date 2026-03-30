@@ -104,11 +104,6 @@ export const updateUserProfile = async (
     };
   }
 
-  type UpdateUserResponse = {
-    user: LoggedUser;
-    success: boolean;
-    message: string;
-  };
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("access_token");
@@ -132,8 +127,6 @@ export const updateUserProfile = async (
     revalidatePath("/profile");
     return data;
   } catch (error) {
-    console.log(error);
-
     return null;
   }
 };

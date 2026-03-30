@@ -5,9 +5,9 @@ import { Badge } from "../ui/badge";
 const LatestJobsCard = ({ job }: { job: Job }) => {
   return (
     <div className="p-4 rounded-ee-2xl rounded-ss-2xl text-yellow-400 shadow-xl flex flex-col gap-4 bg-black/40 hover:outline hover:outline-gray-400/80 cursor-pointer">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between gap-3 items-center">
         <div>
-          <h2 className="text-lg font-medium whitespace-nowrap">
+          <h2 className="text-lg font-medium whitespace-wrap">
             {job.company.name}
           </h2>
           <Image src={"/developer.png"} alt="" width={50} height={50} />

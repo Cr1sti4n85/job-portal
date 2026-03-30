@@ -1,4 +1,5 @@
 import { getUser } from "@/actions/user";
+import AppliedJobs from "@/components/user/AppliedJobs";
 import UserDetails from "@/components/user/UserDetails";
 
 const ProfilePage = async () => {
@@ -6,6 +7,7 @@ const ProfilePage = async () => {
   return (
     <div>
       <UserDetails user={user} />
+      <AppliedJobs user={user} />
     </div>
   );
 };

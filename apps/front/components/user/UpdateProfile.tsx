@@ -62,7 +62,7 @@ const UpdateProfile = ({ open, setOpen, user }: Props) => {
       toast.success(res.message);
       setOpen(false);
     } else {
-      toast.error(res.message);
+      toast.error(res.message || "Error al actualizar perfil");
     }
   };
   return (

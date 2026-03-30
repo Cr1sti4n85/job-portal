@@ -4,7 +4,6 @@ import { Badge } from "../ui/badge";
 import Image from "next/image";
 import UpdateProfile from "./UpdateProfile";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { LoggedUser } from "@/types/user";
 
 const UserDetails = ({ user }: { user: LoggedUser | null }) => {
