@@ -30,21 +30,16 @@ const JobsTable = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
 
   useEffect(() => {
-    const verifyRoleAndGetJobs = async () => {
-      const validUser = await getUser();
-      if (validUser?.role !== "recruiter") {
-        router.push("/");
+    const getJobs = async () => {
+      const result = await getJobsByUserId();
+      if (result.success) {
+        setJobs(result.jobs);
       } else {
-        const result = await getJobsByUserId();
-        if (result.success) {
-          setJobs(result.jobs);
-        } else {
-          toast.error(result.error);
-        }
+        toast.error(result.error);
       }
     };
 
-    verifyRoleAndGetJobs();
+    getJobs();
   }, [router]);
 
   return (

@@ -5,8 +5,6 @@ import CreateUpdateCompany from "./CreateUpdateCompany";
 import { findCompanies } from "@/actions/companies";
 import { toast } from "sonner";
 import { Company } from "@/types/company";
-import { getUser } from "@/actions/user";
-import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import {
   Table,
@@ -22,26 +20,20 @@ import DeleteCompany from "./DeleteCompany";
 import { Edit2, X } from "lucide-react";
 
 const CompaniesTable = () => {
-  const router = useRouter();
   const [companies, setCompanies] = useState<Company[]>([]);
 
   useEffect(() => {
-    const verifyRoleAndGetCompanies = async () => {
-      const validUser = await getUser();
-      if (validUser?.role !== "recruiter") {
-        router.push("/");
+    const getCompanies = async () => {
+      const result = await findCompanies();
+      if (result.success) {
+        setCompanies(result.companies);
       } else {
-        const result = await findCompanies();
-        if (result.success) {
-          setCompanies(result.companies);
-        } else {
-          toast.error(result.error);
-        }
+        toast.error(result.error);
       }
     };
 
-    verifyRoleAndGetCompanies();
-  }, [router]);
+    getCompanies();
+  }, []);
 
   return (
     <>

@@ -1,9 +1,9 @@
-import { getUser } from "@/actions/user";
 import AppliedJobs from "@/components/user/AppliedJobs";
 import UserDetails from "@/components/user/UserDetails";
+import { requireUser } from "@/lib/auth";
 
 const ProfilePage = async () => {
-  const user = await getUser();
+  const user = await requireUser();
   return (
     <div>
       <UserDetails user={user} />

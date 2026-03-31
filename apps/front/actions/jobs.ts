@@ -4,6 +4,7 @@ import { FavoriteJobs, Job } from "@/types/jobs";
 import { AxiosError } from "axios";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const applyToJob = async (jobId: string) => {
   try {
@@ -102,7 +103,6 @@ export const getJobBySearch = async ({
     }
     return data.jobs;
   } catch (error: any) {
-    console.log("getJobByKeyword error", error);
     return { error: error.message };
   }
 };
@@ -149,9 +149,13 @@ export const getUserFavorites = async () => {
     return data;
   } catch (e: AxiosError | unknown) {
     if (e instanceof AxiosError) {
-      return {
-        error: e?.response?.data?.message || e.message,
-      } as UserFavoritesResponse;
+      if (e.response?.status === 401) {
+        redirect("/login");
+      } else {
+        return {
+          error: e?.response?.data?.message || e.message,
+        } as UserFavoritesResponse;
+      }
     } else {
       return { error: "Error al obtener empleos" } as UserFavoritesResponse;
     }

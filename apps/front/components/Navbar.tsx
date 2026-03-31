@@ -49,7 +49,7 @@ const Navbar = ({ user }: NavbarProps) => {
                 ) : (
                   <>
                     <li className="hover:text-yellow-400 duration-300 cursor-pointer">
-                      <Link href="/find-jobs">Encontrar empleos</Link>
+                      <Link href="/job">Encontrar empleos</Link>
                     </li>
                     <li className="hover:text-yellow-400 duration-300 cursor-pointer">
                       <Link href="/favorites">Favoritos</Link>
