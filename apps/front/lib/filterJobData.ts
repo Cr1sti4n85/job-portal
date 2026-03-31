@@ -34,18 +34,18 @@ export const salaries = ["0-499999", "500000-999999", "1000000-1999999"];
 
 export const filterData = [
   {
-    filterType: "Ubicación",
-    filter: "location",
+    filterLabel: "Ubicación",
+    filterParam: "location",
     opts: locations,
   },
   {
-    filterType: "Tipo de empleo",
-    filter: "jobType",
+    filterLabel: "Tipo de empleo",
+    filterParam: "jobType",
     opts: jobsList,
   },
   {
-    filterType: "Sueldo",
-    filter: "salary",
+    filterLabel: "Sueldo",
+    filterParam: "salary",
     opts: salaries,
   },
 ];

@@ -5,14 +5,19 @@ import { FindJobsPageProps, Job } from "@/types/jobs";
 import Image from "next/image";
 
 const FindJobsPage = async ({ searchParams }: FindJobsPageProps) => {
-  const search = await searchParams;
-  const jobs: Job[] = await getJobBySearch(search);
+  const { keyword, location, jobType, salary } = await searchParams;
+  const jobs: Job[] = await getJobBySearch({
+    keyword,
+    location,
+    jobType,
+    salary,
+  });
 
   return (
     <div className="p-5 mx-auto">
       <div className="flex gap-5">
         <div className="text-white w-1/5">
-          <FilterJobs />
+          <FilterJobs keyword={keyword} />
         </div>
         {!jobs?.length ? (
           <div className="flex flex-col items-center w-full">

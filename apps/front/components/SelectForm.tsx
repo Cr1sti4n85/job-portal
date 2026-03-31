@@ -41,7 +41,7 @@ const SelectForm = <T,>({
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>Selecciona el rol</SelectLabel>
+            <SelectLabel>Selecciona:</SelectLabel>
             {list.map((item, idx) => (
               <SelectItem key={idx} value={item}>
                 {item}
