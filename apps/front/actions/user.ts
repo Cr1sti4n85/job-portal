@@ -4,6 +4,7 @@ import { Resume } from "@/types/resume";
 import { LoggedUser } from "@/types/user";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const RegisterUser = async (
   data: FormData,
@@ -63,6 +64,67 @@ export const RegisterUser = async (
     return user;
   } catch {
     return { error: "Error al intentar registrar usuario" };
+  }
+};
+
+export const LoginUser = async (formdData: FormData) => {
+  const email = formdData.get("email");
+  const password = formdData.get("password");
+  const role = formdData.get("role");
+
+  if (!email || !password || !role) {
+    return { error: "Todos los campos son obligatorios" };
+  }
+
+  const res = await fetch(`${process?.env.NEXT_PUBLIC_API_URL}/auth`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      password,
+      role,
+    }),
+  });
+  const data = await res.json();
+  if (data?.error) return data;
+
+  const setCookieHeader = res.headers.get("set-cookie");
+
+  if (setCookieHeader) {
+    const cookieStore = await cookies();
+
+    const [nameValue, ...attributes] = setCookieHeader
+      .split(";")
+      .map((s) => s.trim());
+    const [cookieName, cookieValue] = nameValue.split("=");
+
+    const maxAge = attributes
+      .find((a) => a.toLowerCase().startsWith("max-age"))
+      ?.split("=")[1];
+    const path = attributes
+      .find((a) => a.toLowerCase().startsWith("path"))
+      ?.split("=")[1];
+    const httpOnly = attributes.some((a) => a.toLowerCase() === "httponly");
+    const secure = attributes.some((a) => a.toLowerCase() === "secure");
+    const sameSite = attributes
+      .find((a) => a.toLowerCase().startsWith("samesite"))
+      ?.split("=")[1] as "strict" | "lax" | "none" | undefined;
+
+    cookieStore.set(cookieName, cookieValue, {
+      httpOnly,
+      secure,
+      sameSite,
+      path: path ?? "/",
+      ...(maxAge && { maxAge: parseInt(maxAge) }),
+    });
+  }
+
+  if (role === "reclutador") {
+    redirect("/dashboard/companies");
+  } else {
+    redirect("/");
   }
 };
 

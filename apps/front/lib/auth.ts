@@ -10,3 +10,12 @@ export const requireUser = async () => {
 
   return user;
 };
+
+export const requireRole = async () => {
+  const user = await getUser();
+  if (user?.role === "recruiter") {
+    redirect("/dashboard/companies");
+  } else if (user?.role === "applicant") {
+    redirect("/");
+  }
+};
