@@ -7,20 +7,20 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const RegisterUser = async (
-  data: FormData,
+  formData: FormData,
   profile: Profile,
   resume: Resume,
 ) => {
-  const fullName = data.get("fullName");
-  const email = data.get("email");
-  const password = data.get("password");
-  const phoneNumber = data.get("phoneNumber");
+  const fullName = formData.get("fullName");
+  const email = formData.get("email");
+  const password = formData.get("password");
+  const phoneNumber = formData.get("phoneNumber");
   const profileBio = profile?.profileBio;
   const profilePhoto = profile?.profilePhoto;
-  const profileSkills = data.get("profileSkills")?.toString().split(",");
+  const profileSkills = formData.get("profileSkills")?.toString().split(",");
   const profileResume = resume?.profileResume;
   const profileResumeOriginalName = resume?.profileResumeOriginalName;
-  let role = data.get("role");
+  let role = formData.get("role");
 
   if (
     !fullName ||
@@ -39,42 +39,42 @@ export const RegisterUser = async (
 
   role = role === "postulante" ? "applicant" : "recruiter";
 
-  try {
-    const res = await fetch(`${process?.env.NEXT_PUBLIC_API_URL}/user`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        fullName,
-        email,
-        password,
-        phoneNumber,
-        profileBio,
-        profilePhoto,
-        profileSkills,
-        profileResume,
-        profileResumeOriginalName,
-        role,
-      }),
-      cache: "no-cache",
-    });
+  const res = await fetch(`${process?.env.NEXT_PUBLIC_API_URL}/user`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      fullName,
+      email,
+      password,
+      phoneNumber,
+      profileBio,
+      profilePhoto,
+      profileSkills,
+      profileResume,
+      profileResumeOriginalName,
+      role,
+    }),
+    cache: "no-cache",
+  });
 
-    const user = await res.json();
-    return user;
-  } catch {
-    return { error: "Error al intentar registrar usuario" };
-  }
+  const data = await res.json();
+  if (data?.error) return data;
+
+  redirect("/login");
 };
 
 export const LoginUser = async (formdData: FormData) => {
   const email = formdData.get("email");
   const password = formdData.get("password");
-  const role = formdData.get("role");
+  let role = formdData.get("role");
 
   if (!email || !password || !role) {
     return { error: "Todos los campos son obligatorios" };
   }
+
+  role = role === "postulante" ? "applicant" : "recruiter";
 
   const res = await fetch(`${process?.env.NEXT_PUBLIC_API_URL}/auth`, {
     method: "POST",
@@ -87,6 +87,7 @@ export const LoginUser = async (formdData: FormData) => {
       role,
     }),
   });
+
   const data = await res.json();
   if (data?.error) return data;
 
@@ -121,7 +122,7 @@ export const LoginUser = async (formdData: FormData) => {
     });
   }
 
-  if (role === "reclutador") {
+  if (role === "recruiter") {
     redirect("/dashboard/companies");
   } else {
     redirect("/");
