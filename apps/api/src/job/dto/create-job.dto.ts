@@ -9,38 +9,38 @@ import {
 export class CreateJobDto {
   @IsNotEmpty()
   @IsString()
-  title: string;
+  title!: string;
 
   @IsNotEmpty()
   @IsString()
-  description: string;
+  description!: string;
 
   @IsNotEmpty()
   @IsArray()
-  requirements: string[];
+  requirements!: string[];
 
   @IsNotEmpty()
   @IsNumber()
   @IsPositive()
-  salary: number;
+  salary!: number;
 
   @IsNotEmpty()
   @IsString()
-  location: string;
+  location!: string;
 
   @IsNotEmpty()
   @IsString()
-  jobType: string;
+  jobType!: string;
 
   @IsNotEmpty()
   @IsString()
-  experienceLevel: string;
+  experienceLevel!: string;
 
   @IsNotEmpty()
   @IsNumber()
-  position: number;
+  position!: number;
 
   @IsNotEmpty()
   @IsString()
-  companyId: string;
+  companyId!: string;
 }

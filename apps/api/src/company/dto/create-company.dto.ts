@@ -3,14 +3,14 @@ import { IsNotEmpty, IsOptional, IsString, IsUrl } from 'class-validator';
 export class CreateCompanyDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @IsOptional()
   @IsString()
   description?: string;
 
   @IsOptional()
-  @IsUrl()
+  @IsUrl({}, { message: 'Debe ser URL válida' })
   website?: string;
 
   @IsOptional()

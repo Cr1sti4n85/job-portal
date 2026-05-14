@@ -3,7 +3,6 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "esModuleInterop": true,
-    "ignoreDeprecations": "5.0",
     "isolatedModules": true,
     "declaration": true,
     "removeComments": true,

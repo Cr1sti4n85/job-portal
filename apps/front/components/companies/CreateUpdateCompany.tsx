@@ -18,7 +18,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import uploadFile from "@/lib/uploadFile";
 import { toast } from "sonner";
-import { createCompanyRequest, updateCompanyRequest } from "@/lib/apiRequests";
+import { createCompany, updateCompany } from "@/actions/companies";
 
 type Props = PropsWithChildren<{
   setCompanies: (companies: Company[]) => void;
@@ -45,8 +45,8 @@ const CreateUpdateCompany = ({
     e.preventDefault();
     try {
       const data = company?.id
-        ? await updateCompanyRequest(companyData, company.id)
-        : await createCompanyRequest(companyData);
+        ? await updateCompany(companyData, company.id)
+        : await createCompany(companyData);
       if (data.success) {
         toast.success(data.message);
         if (company?.id) {
@@ -59,18 +59,10 @@ const CreateUpdateCompany = ({
 
         setOpen(false);
       } else {
-        toast.error(data.message);
+        toast.error(data.error);
       }
     } catch {
       toast.error("Ocurrió un error");
-    } finally {
-      setCompanyData({
-        name: "",
-        description: "",
-        website: "",
-        location: "",
-        logo: "",
-      });
     }
   };
 

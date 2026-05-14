@@ -1,6 +1,6 @@
 "use server";
 import API from "@/config/http";
-import { FavoriteJobs, Job } from "@/types/jobs";
+import { Job } from "@/types/jobs";
 import { AxiosError } from "axios";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
