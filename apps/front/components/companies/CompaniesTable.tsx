@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import CreateUpdateCompany from "./CreateUpdateCompany";
-import { findCompanies } from "@/actions/companies";
 import { toast } from "sonner";
 import { Company } from "@/types/company";
 import { Button } from "../ui/button";
@@ -18,13 +17,14 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import DeleteCompany from "./DeleteCompany";
 import { Edit2, X } from "lucide-react";
+import { findCompaniesRequest } from "@/lib/apiRequests";
 
 const CompaniesTable = () => {
   const [companies, setCompanies] = useState<Company[]>([]);
 
   useEffect(() => {
     const getCompanies = async () => {
-      const result = await findCompanies();
+      const result = await findCompaniesRequest();
       if (result.success) {
         setCompanies(result.companies);
       } else {
