@@ -6,6 +6,122 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+export const createJob = async (jobData: Partial<Job>) => {
+  const {
+    title,
+    description,
+    requirements,
+    salary,
+    location,
+    jobType,
+    experienceLevel,
+    companyId,
+    position,
+  } = jobData;
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token");
+    const res = await API.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/job`,
+      {
+        title,
+        description,
+        requirements,
+        salary,
+        location,
+        jobType,
+        experienceLevel,
+        companyId,
+        position,
+      },
+      {
+        headers: {
+          Cookie: `access_token=${token?.value}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    revalidatePath("/dashboard/jobs");
+    return res.data;
+  } catch (e: AxiosError | unknown) {
+    if (e instanceof AxiosError) {
+      return { error: e?.response?.data?.message || e.message };
+    } else {
+      return { error: "Error al crear nuevo empleo" };
+    }
+  }
+};
+
+export const updateJob = async (jobData: Partial<Job>, jobId: string) => {
+  const {
+    title,
+    description,
+    requirements,
+    salary,
+    location,
+    jobType,
+    experienceLevel,
+    companyId,
+    position,
+  } = jobData;
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token");
+    const res = await API.patch(
+      `${process.env.NEXT_PUBLIC_API_URL}/job/${jobId}`,
+      {
+        title,
+        description,
+        requirements,
+        salary,
+        location,
+        jobType,
+        experienceLevel,
+        companyId,
+        position,
+      },
+      {
+        headers: {
+          Cookie: `access_token=${token?.value}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    revalidatePath("/dashboard/jobs");
+    return res.data;
+  } catch (e: AxiosError | unknown) {
+    if (e instanceof AxiosError) {
+      return { error: e?.response?.data?.message || e.message };
+    } else {
+      return { error: "Error al intentar actualizar" };
+    }
+  }
+};
+
+export const deleteJob = async (jobId: string) => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token");
+    const res = await API.delete(
+      `${process.env.NEXT_PUBLIC_API_URL}/admin/jobs/${jobId}`,
+      {
+        headers: {
+          Cookie: `access_token=${token?.value}`,
+        },
+      },
+    );
+    revalidatePath("/dashboard/jobs");
+    return res.data;
+  } catch (e: AxiosError | unknown) {
+    if (e instanceof AxiosError) {
+      return { error: e?.response?.data?.message || e.message };
+    } else {
+      return { error: "No se pudo borrar el registro" };
+    }
+  }
+};
+
 export const applyToJob = async (jobId: string) => {
   try {
     const cookieStore = await cookies();
@@ -116,7 +232,6 @@ export const getJobsByUserId = async () => {
         Cookie: `access_token=${token?.value}`,
       },
     });
-    revalidatePath("/dashboard/jobs");
     return res.data;
   } catch (e: AxiosError | unknown) {
     if (e instanceof AxiosError) {

@@ -38,6 +38,7 @@ export class JobService {
         companyId,
         createdBy: id,
       },
+      include: { company: true },
     });
 
     if (!job)
@@ -172,8 +173,21 @@ export class JobService {
     };
   }
 
-  update(id: number, updateJobDto: UpdateJobDto) {
-    return `This action updates a #${id} job`;
+  async update(id: string, updateJobDto: UpdateJobDto) {
+    const updatedJob = await this.prismaService.job.update({
+      where: { id },
+      data: updateJobDto,
+      include: { company: true },
+    });
+
+    if (!updatedJob) {
+      throw new NotFoundException('Empleo no encontrada');
+    }
+    return {
+      success: true,
+      message: 'Empleo actualizado exitosamente',
+      job: updatedJob,
+    };
   }
 
   async remove(id: string) {

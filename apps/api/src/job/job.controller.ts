@@ -49,7 +49,8 @@ export class JobController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   update(@Param('id') id: string, @Body() updateJobDto: UpdateJobDto) {
-    return this.jobService.update(+id, updateJobDto);
+    return this.jobService.update(id, updateJobDto);
   }
 }

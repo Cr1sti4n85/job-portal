@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/dialog";
 import { PropsWithChildren, useState } from "react";
 import { Button } from "../ui/button";
-import { deleteJobRequest } from "@/lib/apiRequests";
 import { Job } from "@/types/jobs";
 import { toast } from "sonner";
+import { deleteJob } from "@/actions/jobs";
 
 type Props = PropsWithChildren<{
   job?: Job;
@@ -29,7 +29,7 @@ const DeleteJob = ({ children, job, setJobs, jobs }: Props) => {
       return;
     }
     try {
-      const data = await deleteJobRequest(job?.id);
+      const data = await deleteJob(job?.id);
       if (data?.success) {
         toast.success(data.message);
         setJobs(jobs?.filter((c) => c.id !== job?.id));
