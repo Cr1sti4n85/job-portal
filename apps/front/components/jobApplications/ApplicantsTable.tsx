@@ -11,12 +11,12 @@ import {
 import { Application } from "@/types/application";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { MoreHorizontal } from "lucide-react";
-import { updateStatusRequest } from "@/lib/apiRequests";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import { GrDocumentCloud } from "react-icons/gr";
+import { updateStatus } from "@/actions/applications";
 
 type Props = {
   applications: Application[];
@@ -27,7 +27,7 @@ const ApplicantsTable = ({ applications }: Props) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const statusHandler = async (applicationId: string, status: string) => {
-    const data = await updateStatusRequest(applicationId, status);
+    const data = await updateStatus(applicationId, status);
     if (!data.success) {
       toast.error(data.message);
     } else {

@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/dialog";
 import { PropsWithChildren, useState } from "react";
 import { Button } from "../ui/button";
-import { deleteCompanyRequest } from "@/lib/apiRequests";
 import { Company } from "@/types/company";
 import { toast } from "sonner";
+import { deleteCompany } from "@/actions/companies";
 
 type Props = PropsWithChildren<{
   company?: Company;
@@ -34,13 +34,13 @@ const DeleteCompany = ({
       return;
     }
     try {
-      const data = await deleteCompanyRequest(company?.id);
+      const data = await deleteCompany(company?.id);
       if (data?.success) {
         toast.success(data.message);
         setCompanies(companies?.filter((c) => c.id !== company?.id));
         setOpen(false);
       } else {
-        toast.error(data.message);
+        toast.error(data.error);
       }
     } catch {
       toast.error("Ocurrió un error");

@@ -14,9 +14,6 @@ import { Job } from "@/types/jobs";
 import SelectForm from "../SelectForm";
 import { experience, jobsList, locations } from "@/lib/filterJobData";
 import { toast } from "sonner";
-import { createJobRequest, updateJobRequest } from "@/lib/apiRequests";
-import { getUser } from "@/actions/user";
-import { useRouter } from "next/navigation";
 import { Company } from "@/types/company";
 import { findCompanies } from "@/actions/companies";
 import {
@@ -29,6 +26,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Label } from "../ui/label";
+import { createJob, updateJob } from "@/actions/jobs";
 
 type Props = PropsWithChildren<{
   setJobs: (jobs: Job[]) => void;
@@ -40,48 +38,41 @@ const CreateUpdateJob = ({ children, setJobs, jobs, job }: Props) => {
   const [open, setOpen] = useState<boolean>(false);
   const [jobData, setJobData] = useState<Job>(job ? { ...job } : ({} as Job));
 
-  const router = useRouter();
   const [companies, setCompanies] = useState<Company[]>([]);
 
   useEffect(() => {
-    const verifyRoleAndGetCompanies = async () => {
-      const validUser = await getUser();
-      if (validUser?.role !== "recruiter") {
-        router.push("/");
+    const verifyUserCompanies = async () => {
+      const result = await findCompanies();
+      if (result.success) {
+        setCompanies(result.companies);
       } else {
-        const result = await findCompanies();
-        if (result.success) {
-          setCompanies(result.companies);
-        } else {
-          toast.error(result.error);
-        }
+        toast.error(result.error);
       }
     };
 
-    verifyRoleAndGetCompanies();
-  }, [router]);
+    verifyUserCompanies();
+  }, []);
 
   const jobHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const data = job?.id
-        ? await updateJobRequest(jobData, job.id)
-        : await createJobRequest(jobData);
+        ? await updateJob(jobData, job.id)
+        : await createJob(jobData);
       if (data.success) {
         toast.success(data.message);
+
         if (job?.id) {
-          setJobs(jobs?.map((j) => (j.id == data.job.id ? data.job : j)));
+          setJobs(jobs.map((j) => (j.id == data.job.id ? data.job : j)));
         } else {
           setJobs([...jobs, data.job]);
         }
         setOpen(false);
       } else {
-        toast.error(data.message);
+        toast.error(data.error);
       }
     } catch {
       toast.error("Ocurrió un error");
-    } finally {
-      setJobData({} as Job);
     }
   };
 
@@ -184,7 +175,7 @@ const CreateUpdateJob = ({ children, setJobs, jobs, job }: Props) => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Selecciona el rol</SelectLabel>
+                    <SelectLabel>Selecciona empresa</SelectLabel>
                     {companies.map((c, idx) => (
                       <SelectItem key={idx} value={c.id}>
                         {c.name}

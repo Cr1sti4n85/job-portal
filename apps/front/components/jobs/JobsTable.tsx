@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { toast } from "sonner";
-import { getUser } from "@/actions/user";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import {
@@ -32,6 +31,7 @@ const JobsTable = () => {
   useEffect(() => {
     const getJobs = async () => {
       const result = await getJobsByUserId();
+
       if (result.success) {
         setJobs(result.jobs);
       } else {
@@ -40,7 +40,7 @@ const JobsTable = () => {
     };
 
     getJobs();
-  }, [router]);
+  }, []);
 
   return (
     <>
@@ -69,7 +69,7 @@ const JobsTable = () => {
             ? jobs?.map((job) => (
                 <TableRow key={job.id}>
                   <TableCell className="font-medium">
-                    {job.company.name}
+                    {job.company?.name}
                   </TableCell>
                   <TableCell>{job.title}</TableCell>
                   <TableCell>{job.location}</TableCell>

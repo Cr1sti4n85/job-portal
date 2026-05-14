@@ -1,7 +1,6 @@
 import CompaniesTable from "@/components/companies/CompaniesTable";
 import { requireUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import React from "react";
 
 const CompanyPage = async () => {
   const user = await requireUser();
