@@ -15,7 +15,6 @@ import SelectForm from "../SelectForm";
 import { experience, jobsList, locations } from "@/lib/filterJobData";
 import { toast } from "sonner";
 import { Company } from "@/types/company";
-import { findCompanies } from "@/actions/companies";
 import {
   Select,
   SelectContent,
@@ -27,6 +26,7 @@ import {
 } from "../ui/select";
 import { Label } from "../ui/label";
 import { createJob, updateJob } from "@/actions/jobs";
+import { findCompaniesRequest } from "@/lib/apiRequests";
 
 type Props = PropsWithChildren<{
   setJobs: (jobs: Job[]) => void;
@@ -42,7 +42,7 @@ const CreateUpdateJob = ({ children, setJobs, jobs, job }: Props) => {
 
   useEffect(() => {
     const verifyUserCompanies = async () => {
-      const result = await findCompanies();
+      const result = await findCompaniesRequest();
       if (result.success) {
         setCompanies(result.companies);
       } else {

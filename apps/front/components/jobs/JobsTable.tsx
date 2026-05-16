@@ -19,10 +19,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Edit2, Eye, MoreHorizontal, X } from "lucide-react";
-import { getJobsByUserId } from "@/actions/jobs";
 import { Job } from "@/types/jobs";
 import CreateUpdateJob from "./CreateUpdateJob";
 import DeleteJob from "./DeleteJob";
+import { getJobsByUserIdRequest } from "@/lib/apiRequests";
 
 const JobsTable = () => {
   const router = useRouter();
@@ -30,7 +30,7 @@ const JobsTable = () => {
 
   useEffect(() => {
     const getJobs = async () => {
-      const result = await getJobsByUserId();
+      const result = await getJobsByUserIdRequest();
 
       if (result.success) {
         setJobs(result.jobs);

@@ -11,6 +11,7 @@ type NavbarProps = {
 
 const Navbar = ({ user }: NavbarProps) => {
   const router = useRouter();
+
   const logOut = async () => {
     const data = await logoutRequest();
     if (data.success) {

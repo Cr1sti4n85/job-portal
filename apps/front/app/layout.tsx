@@ -3,17 +3,14 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import MantProvider from "@/providers/MantProvider";
 import { Toaster } from "sonner";
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { getUser } from "@/actions/user";
-import { redirect } from "next/navigation";
 
-const geistSans = Geist({
+export const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
+export const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
@@ -28,8 +25,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getUser();
-
   return (
     <html lang="en">
       <body
@@ -37,7 +32,6 @@ export default async function RootLayout({
       >
         <MantProvider>
           <Toaster />
-          <Navbar user={user} />
           {children}
           <Footer />
         </MantProvider>
