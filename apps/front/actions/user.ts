@@ -2,7 +2,7 @@
 import { Profile } from "@/types/profile";
 import { Resume } from "@/types/resume";
 import { LoggedUser } from "@/types/user";
-import { revalidatePath } from "next/cache";
+import { refresh, revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -140,10 +140,11 @@ export const getUser = async () => {
       },
       cache: "no-store",
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      return null;
+    }
 
     const data: LoggedUser = await res.json();
-
     return data;
   } catch {
     return null;

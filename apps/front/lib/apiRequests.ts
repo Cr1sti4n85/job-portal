@@ -47,7 +47,6 @@ export const getJobsRequest = async (): Promise<Job[]> => {
     }
 
     const data: JobsResponse = await res.json();
-    console.log({ data });
     return data.jobs ?? [];
   } catch (error) {
     console.error("getJobs error:", error);
