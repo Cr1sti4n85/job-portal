@@ -2,6 +2,7 @@
 import { Profile } from "@/types/profile";
 import { Resume } from "@/types/resume";
 import { LoggedUser } from "@/types/user";
+import { loginSchema } from "@/zod-schemas/loginSchema";
 import { userSchema } from "@/zod-schemas/userSchema";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -50,27 +51,28 @@ export const RegisterUser = async (
   redirect("/login");
 };
 
-export const LoginUser = async (formdData: FormData) => {
-  const email = formdData.get("email");
-  const password = formdData.get("password");
-  let role = formdData.get("role");
+export const LoginUser = async (formData: FormData) => {
+  const rawData = {
+    email: formData.get("email"),
+    password: formData.get("password"),
+    role: formData.get("role") === "postulante" ? "applicant" : "recruiter",
+  };
 
-  if (!email || !password || !role) {
-    return { error: "Todos los campos son obligatorios" };
+  const parsed = loginSchema.safeParse(rawData);
+
+  if (!parsed.success) {
+    return {
+      error: true,
+      errors: z.flattenError(parsed.error).fieldErrors,
+    };
   }
-
-  role = role === "postulante" ? "applicant" : "recruiter";
 
   const res = await fetch(`${process?.env.NEXT_PUBLIC_API_URL}/auth`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      email,
-      password,
-      role,
-    }),
+    body: JSON.stringify(parsed.data),
   });
 
   const data = await res.json();
@@ -107,7 +109,7 @@ export const LoginUser = async (formdData: FormData) => {
     });
   }
 
-  if (role === "recruiter") {
+  if (parsed.data.role === "recruiter") {
     redirect("/dashboard/companies");
   } else {
     redirect("/");

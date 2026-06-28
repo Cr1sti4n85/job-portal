@@ -17,9 +17,10 @@ import Link from "next/link";
 
 const LoginForm = () => {
   const handleSubmit = async (formData: FormData) => {
-    const data = await LoginUser(formData);
-    if (data?.error) {
-      toast.error(data.error);
+    const res = await LoginUser(formData);
+    if (res?.error) {
+      const errorMessages: string[] = Object.values(res.errors);
+      toast.error(errorMessages[0]);
     }
   };
   return (
