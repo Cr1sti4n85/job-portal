@@ -1,12 +1,7 @@
 "use client";
-import { LoggedUser } from "@/types/user";
 import Link from "next/link";
 
-type NavbarProps = {
-  user: LoggedUser | null;
-};
-
-const AuthNavbar = ({ user }: NavbarProps) => {
+const AuthNavbar = () => {
   return (
     <div className="text-white ">
       <div className="flex items-center justify-between px-5 mx-auto max-w-7xl h-16">

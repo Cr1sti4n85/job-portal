@@ -2,60 +2,45 @@
 import { Profile } from "@/types/profile";
 import { Resume } from "@/types/resume";
 import { LoggedUser } from "@/types/user";
-import { refresh, revalidatePath } from "next/cache";
+import { userSchema } from "@/zod-schemas/userSchema";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import z from "zod";
 
 export const RegisterUser = async (
   formData: FormData,
   profile: Profile,
   resume: Resume,
 ) => {
-  const fullName = formData.get("fullName");
-  const email = formData.get("email");
-  const password = formData.get("password");
-  const phoneNumber = formData.get("phoneNumber");
-  const profileBio = profile?.profileBio;
-  const profilePhoto = profile?.profilePhoto;
-  const profileSkills = formData.get("profileSkills")?.toString().split(",");
-  const profileResume = resume?.profileResume;
-  const profileResumeOriginalName = resume?.profileResumeOriginalName;
-  let role = formData.get("role");
+  const rawData = {
+    fullName: formData.get("fullName"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    phoneNumber: formData.get("phoneNumber"),
+    profileBio: profile?.profileBio,
+    profilePhoto: profile?.profilePhoto,
+    profileSkills: formData.get("profileSkills")?.toString() ?? "",
+    profileResume: resume?.profileResume,
+    profileResumeOriginalName: resume?.profileResumeOriginalName,
+    role: formData.get("role") === "postulante" ? "applicant" : "recruiter",
+  };
 
-  if (
-    !fullName ||
-    !email ||
-    !password ||
-    !phoneNumber ||
-    !profileBio ||
-    !profilePhoto ||
-    !profileSkills ||
-    !profileResume ||
-    !profileResumeOriginalName ||
-    !role
-  ) {
-    return { error: "Todos los campos son obligatorios" };
+  const parsed = userSchema.safeParse(rawData);
+
+  if (!parsed.success) {
+    return {
+      error: true,
+      errors: z.flattenError(parsed.error).fieldErrors,
+    };
   }
-
-  role = role === "postulante" ? "applicant" : "recruiter";
 
   const res = await fetch(`${process?.env.NEXT_PUBLIC_API_URL}/user`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      fullName,
-      email,
-      password,
-      phoneNumber,
-      profileBio,
-      profilePhoto,
-      profileSkills,
-      profileResume,
-      profileResumeOriginalName,
-      role,
-    }),
+    body: JSON.stringify(parsed.data),
     cache: "no-cache",
   });
 
