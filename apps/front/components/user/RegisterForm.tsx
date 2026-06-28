@@ -56,7 +56,8 @@ const RegisterForm = () => {
   const handleSubmit = async (formData: FormData) => {
     const res = await RegisterUser(formData, profile, resume);
     if (res?.error) {
-      toast.error(res.error);
+      const errorMessages: string[] = Object.values(res.errors);
+      toast.error(errorMessages[0]);
     }
   };
   return (

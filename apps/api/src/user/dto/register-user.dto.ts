@@ -11,15 +11,15 @@ import { Role } from 'generated/prisma';
 export class RegisterUserDto {
   @IsNotEmpty({ message: 'El campo no puede estar vacío' })
   @IsString()
-  fullName: string;
+  fullName!: string;
 
   @IsNotEmpty({ message: 'El campo no puede estar vacío' })
   @IsString()
-  email: string;
+  email!: string;
 
   @IsNotEmpty({ message: 'El campo no puede estar vacío' })
   @IsString()
-  phoneNumber: string;
+  phoneNumber!: string;
 
   @IsStrongPassword(
     {
@@ -34,16 +34,16 @@ export class RegisterUserDto {
         'La contraseña debe contener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo.',
     },
   )
-  password: string;
+  password!: string;
 
   @IsOptional()
   @IsString()
-  profileBio: string;
+  profileBio?: string;
 
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  profileSkills: string[];
+  profileSkills?: string[];
 
   @IsOptional()
   @IsUrl({}, { message: 'Debe ser una URL válida' })
